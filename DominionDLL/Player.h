@@ -58,6 +58,9 @@ private:
     int _remodelGoldThreshold;
 };
 
+
+
+
 class PlayerStateInformed : public Player
 {
 public:
@@ -92,6 +95,25 @@ private:
 
     const BuyAgenda *_agenda;
     int _remodelGoldThreshold;
+
+
+	//Build a vector of features
+	typedef struct StateFeature{
+		bool enabled;
+		double weight;
+
+		StateFeature() : enabled(false), weight(0.0){}
+
+		StateFeature(double myWeight) : enabled(true), weight(myWeight){}
+	};
+
+	enum StateFeatures {
+		OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
+		HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS
+	};
+
+
+	Vector<StateFeature>* GetStateFeatureVector(const State &s);
 };
 
 class PlayerSmart : public Player

@@ -1,13 +1,13 @@
 #include "Main.h"
 
-// test commit mike
-
+/// Create a player given a Buy Agenda! 
 PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda)
 {
     _agenda = agenda;
     _remodelGoldThreshold = 2;
 }
 
+/// initial Decision method, 
 void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -119,6 +119,7 @@ void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &respons
     }
 }
 
+/// Returnss curses, coppers, and estates in current hand
 Vector<Card*> PlayerStateInformed::TrashableCards(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -131,6 +132,7 @@ Vector<Card*> PlayerStateInformed::TrashableCards(const State &s) const
     return result;
 }
 
+/// Number of trashable cards in hand (discarables = curse, copper, or estates)
 UINT PlayerStateInformed::TrashableCardCount(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -143,6 +145,7 @@ UINT PlayerStateInformed::TrashableCardCount(const State &s) const
     return result;
 }
 
+/// Number of discarable cards in hand (discarables = curse, copper, or pure victory)
 UINT PlayerStateInformed::DiscardableCardCount(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -154,12 +157,14 @@ UINT PlayerStateInformed::DiscardableCardCount(const State &s) const
     return result;
 }
 
+/// Chooses which card is most desired based on the buy _Agenda
 bool PlayerStateInformed::CardDesired(const State &s, int player, Card *c) const
 {
     Vector<Card*> choice(1, c);
     return (_agenda->Buy(s, player, choice) != NULL);
 }
 
+/// 
 void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -237,6 +242,7 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
     }
 }
 
+/// Creates scoring function for choosing which cards to copy and returns that decision
 void PlayerStateInformed::MakeCopyDecision(const State &s, DecisionResponse &response)
 {
     AIUtility::SelectCards(s, response, [](Card *c)
@@ -248,11 +254,12 @@ void PlayerStateInformed::MakeCopyDecision(const State &s, DecisionResponse &res
     } );
 }
 
+/// Creates scoring function for discarding cards and returns that decision
 void PlayerStateInformed::MakeDiscardDownDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [](Card *c)
     {
-        if(c->IsPureVictory()) return 20;
+        if(c->IsPureVictory()) return 20; // always prefer to discard victory cards that don't do anything
         if(c->name == "curse") return 19;
         if(c->name == "copper") return 18;
         return -100 - c->cost;
@@ -260,6 +267,7 @@ void PlayerStateInformed::MakeDiscardDownDecision(const State &s, DecisionRespon
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+/// Creates scoring function for trashing cards (curses, estates, coppers) and returns that decision
 void PlayerStateInformed::MakeTrashDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [](Card *c)
@@ -267,12 +275,13 @@ void PlayerStateInformed::MakeTrashDecision(const State &s, DecisionResponse &re
         if(c->name == "curse") return 20;
         if(c->name == "estate") return 19;
         if(c->name == "copper") return 18;
-        if(c->isVictory) return -100 - c->cost;
-        return -(c->cost);
+        if(c->isVictory) return -100 - c->cost; // Don't trash victory cards(especially the higher costing ones)
+        return -(c->cost); // Otherwise prefer to discard cards that cost less
     };
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+/// Creates scoring function for whether to reorder the deck and returns that decision
 void PlayerStateInformed::MakeDeckReorderDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [&s](Card *c)
@@ -284,6 +293,9 @@ void PlayerStateInformed::MakeDeckReorderDecision(const State &s, DecisionRespon
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+
+//This is what we should focus on!
+/// for Base Set cards only
 void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -377,6 +389,7 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
 }
 
+/// for Intrigue cards only
 void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -537,6 +550,7 @@ void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse 
     }
 }
 
+/// for Alchemy cards only
 void PlayerStateInformed::MakeAlchemyDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -557,6 +571,7 @@ void PlayerStateInformed::MakeAlchemyDecision(const State &s, DecisionResponse &
     }
 }
 
+/// for Seaside cards only
 void PlayerStateInformed::MakeSeasideDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -665,6 +680,7 @@ void PlayerStateInformed::MakeSeasideDecision(const State &s, DecisionResponse &
     }
 }
 
+/// for Prosperity cards only
 void PlayerStateInformed::MakeProsperityDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -775,6 +791,7 @@ void PlayerStateInformed::MakeProsperityDecision(const State &s, DecisionRespons
     }
 }
 
+/// for Custom cards only
 void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -896,6 +913,9 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
     }
 }
 
+// This is where we create a new mutated player
+
+/// Creates a new Player by mutuating the buy agenda (and our decision weights agenda)
 PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
     PlayerStateInformed *result = new PlayerStateInformed(_agenda->Mutate(cards, options));
@@ -904,4 +924,13 @@ PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, cons
         result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
     }
     return result;
+}
+
+Vector<PlayerStateInformed::StateFeature>* PlayerStateInformed::GetStateFeatureVector(const State &s)
+{
+	Vector<StateFeature>* features = new Vector<StateFeature>();
+
+
+
+	return features;
 }
