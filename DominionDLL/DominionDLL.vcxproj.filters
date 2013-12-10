@@ -147,6 +147,9 @@
     <ClCompile Include="MetaTestChamber.cpp">
       <Filter>AI</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerStateInformed.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Base">

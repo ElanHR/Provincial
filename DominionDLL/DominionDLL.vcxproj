@@ -61,6 +61,7 @@
     <ClCompile Include="MetaTestChamber.cpp" />
     <ClCompile Include="PlayerHeuristic.cpp" />
     <ClCompile Include="PlayerRandom.cpp" />
+    <ClCompile Include="PlayerStateInformed.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
