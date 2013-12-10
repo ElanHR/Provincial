@@ -1,5 +1,6 @@
 #include "Main.h"
 
+/// Given a scoring function chooses among available cards
 void AIUtility::SelectCards(const State &s, DecisionResponse &response, const function<double(Card*)> &scoringFunction)
 {
     Vector<Card*> v = s.decision.cardChoices;

@@ -1,13 +1,13 @@
 #include "Main.h"
 
-// test commit mike
-
+/// 
 PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda)
 {
     _agenda = agenda;
     _remodelGoldThreshold = 2;
 }
 
+///
 void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -119,6 +119,7 @@ void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &respons
     }
 }
 
+///
 Vector<Card*> PlayerStateInformed::TrashableCards(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -131,6 +132,8 @@ Vector<Card*> PlayerStateInformed::TrashableCards(const State &s) const
     return result;
 }
 
+
+/// 
 UINT PlayerStateInformed::TrashableCardCount(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -143,6 +146,7 @@ UINT PlayerStateInformed::TrashableCardCount(const State &s) const
     return result;
 }
 
+///
 UINT PlayerStateInformed::DiscardableCardCount(const State &s) const
 {
     const PlayerState &p = s.players[s.decision.controllingPlayer];
@@ -154,12 +158,14 @@ UINT PlayerStateInformed::DiscardableCardCount(const State &s) const
     return result;
 }
 
+///
 bool PlayerStateInformed::CardDesired(const State &s, int player, Card *c) const
 {
     Vector<Card*> choice(1, c);
     return (_agenda->Buy(s, player, choice) != NULL);
 }
 
+/// 
 void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -237,6 +243,7 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
     }
 }
 
+///
 void PlayerStateInformed::MakeCopyDecision(const State &s, DecisionResponse &response)
 {
     AIUtility::SelectCards(s, response, [](Card *c)
@@ -248,11 +255,12 @@ void PlayerStateInformed::MakeCopyDecision(const State &s, DecisionResponse &res
     } );
 }
 
+///
 void PlayerStateInformed::MakeDiscardDownDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [](Card *c)
     {
-        if(c->IsPureVictory()) return 20;
+        if(c->IsPureVictory()) return 20; // always prefer to discard victory cards that don't do anything
         if(c->name == "curse") return 19;
         if(c->name == "copper") return 18;
         return -100 - c->cost;
@@ -260,6 +268,7 @@ void PlayerStateInformed::MakeDiscardDownDecision(const State &s, DecisionRespon
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+/// Creates scoring function for trashing cards (curses, estates, coppers)
 void PlayerStateInformed::MakeTrashDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [](Card *c)
@@ -267,12 +276,13 @@ void PlayerStateInformed::MakeTrashDecision(const State &s, DecisionResponse &re
         if(c->name == "curse") return 20;
         if(c->name == "estate") return 19;
         if(c->name == "copper") return 18;
-        if(c->isVictory) return -100 - c->cost;
-        return -(c->cost);
+        if(c->isVictory) return -100 - c->cost; // Don't trash victory cards(especially the higher costing ones)
+        return -(c->cost); // Otherwise prefer to discard cards that cost less
     };
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+///
 void PlayerStateInformed::MakeDeckReorderDecision(const State &s, DecisionResponse &response)
 {
     auto scoringFunction = [&s](Card *c)
@@ -284,6 +294,7 @@ void PlayerStateInformed::MakeDeckReorderDecision(const State &s, DecisionRespon
     AIUtility::SelectCards(s, response, scoringFunction);
 }
 
+///
 void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -377,6 +388,7 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
 }
 
+///
 void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -537,6 +549,7 @@ void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse 
     }
 }
 
+///
 void PlayerStateInformed::MakeAlchemyDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -557,6 +570,7 @@ void PlayerStateInformed::MakeAlchemyDecision(const State &s, DecisionResponse &
     }
 }
 
+///
 void PlayerStateInformed::MakeSeasideDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -665,6 +679,7 @@ void PlayerStateInformed::MakeSeasideDecision(const State &s, DecisionResponse &
     }
 }
 
+///
 void PlayerStateInformed::MakeProsperityDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -775,6 +790,7 @@ void PlayerStateInformed::MakeProsperityDecision(const State &s, DecisionRespons
     }
 }
 
+///
 void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &response)
 {
     const DecisionState &d = s.decision;
@@ -896,6 +912,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
     }
 }
 
+///
 PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
     PlayerStateInformed *result = new PlayerStateInformed(_agenda->Mutate(cards, options));
