@@ -4,4 +4,10 @@ TestChamber - creates and
 
 ConfigWindow.cs ln362  - runTournament launch code
 
+init our player with a vector of random feature weights
+write mutate function
+call when incrementing generations (TestChamber.StrategizeStep ? ln 330)
+increase generational count so that there's enough time for evolution
+
+
 modify line 65 of app.cpp so that we pit their AI against ours
