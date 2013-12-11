@@ -15,7 +15,7 @@ DecisionStrategy::DecisionStrategy(DecisionStrategy &m){
 
 }
 
-double DecisionStrategy::getDecisionWeight(const State &s, Decisions d){
+double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d){
 
 	double w = 0.0;
 
@@ -23,7 +23,12 @@ double DecisionStrategy::getDecisionWeight(const State &s, Decisions d){
 	for (unsigned int i = 0; i < _decisionWeights->at(d)->Length(); i++){
 		FeatureWeight f = _decisionWeights->at(d)->at(i);
 
-		double curW;
+		const DecisionState &d = s.decision;
+		Card &a = *d.activeCard;
+		int player = s.decision.controllingPlayer;
+		const PlayerState &p = s.players[player];
+
+		double curW ;
 
 		//  MONEY_DENSITY_OF_DECK,
 		//  MONEY_DENSITY_OF_DECK_GREATER_THAN_1,
@@ -31,21 +36,42 @@ double DecisionStrategy::getDecisionWeight(const State &s, Decisions d){
 		//  MONEY_DENSITY_OF_DECK_GREATER_THAN_2,
 		//  ACTION_DENSITY_OF_DECK,
 		//  VICTORY_DENSITY_OF_DECK,
-
+		double featureValue = 0.0;
 		switch (f.type){
-			case OPPONENT_HAS_ATTACK_CARDS:
+			case MONEY_DENSITY_OF_DECK:
 				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
 				//TODO: ACTUALLY EXTRACT INFO FROM S
-				s.data->players[0].
-				curW = f.weight * 1.0;
+
+				int totalMoney = 0;
+				//for (int i = 0; i < p.deck.Length; i++){
+				//	Card *c = p.deck.at(i);
+				//for (Card *c : d.cardChoices){
+				for (Card *c : p.deck){
+					if (c->isTreasure){
+						totalMoney += c->money;
+					}
+				}
+				featureValue = totalMoney / p.deck.Length();
+				break;
+			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1:
+				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
+				//TODO: ACTUALLY EXTRACT INFO FROM S
+
+				int totalMoney = 0;
+				
+				for (auto *c : p.deck){
+					if (c->isTreasure){
+						totalMoney += c->money;
+					}
+				}
+				featureValue = totalMoney / p.deck.Length();
+				
 				break;
 
 				//TODO: FILL IN MORE FEATURES HERE
-
-
 		}
 
-		w += curW;
+		w +=  f.weight * featureValue;
 	}
 
 
