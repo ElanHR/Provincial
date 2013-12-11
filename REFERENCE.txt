@@ -10,4 +10,9 @@ call when incrementing generations (TestChamber.StrategizeStep ? ln 330)
 increase generational count so that there's enough time for evolution
 also when increasing generations, compute divergence and speciate
 
+line 558 TestChamber.cpp : Test Pool.
+modify it so only members of the same species compete.
+- have a list of pools.
+line 360 TestChamber.cpp : RunAllPairTests . we call this for every species now, instead of only the one pool per chamber as is.
+
 modify line 65 of app.cpp so that we pit their AI against ours
