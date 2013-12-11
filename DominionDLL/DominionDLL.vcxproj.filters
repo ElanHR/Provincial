@@ -94,6 +94,9 @@
     <ClInclude Include="EventCustom.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="DecisionStrategy.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DLLMain.cpp">
@@ -148,6 +151,9 @@
       <Filter>AI</Filter>
     </ClCompile>
     <ClCompile Include="PlayerStateInformed.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionStrategy.cpp">
       <Filter>AI</Filter>
     </ClCompile>
   </ItemGroup>

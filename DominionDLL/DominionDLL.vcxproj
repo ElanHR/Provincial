@@ -29,6 +29,7 @@
     <ClInclude Include="CardEffectSeaside.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="DecisionStrategy.h" />
     <ClInclude Include="DominionGame.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Enums.h" />
@@ -53,6 +54,7 @@
     <ClCompile Include="AppParameters.cpp" />
     <ClCompile Include="BuyAgenda.cpp" />
     <ClCompile Include="CardDatabase.cpp" />
+    <ClCompile Include="DecisionStrategy.cpp" />
     <ClCompile Include="DLLMain.cpp" />
     <ClCompile Include="DominionGame.cpp" />
     <ClCompile Include="Engine.cpp" />
