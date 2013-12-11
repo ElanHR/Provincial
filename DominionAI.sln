@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominionApp", "DominionApp\DominionApp.csproj", "{B3DDFBDE-7EAA-4903-8084-9A105F773BEE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A1FD2443-4B10-42D8-AEE2-3444225A8D1C} = {A1FD2443-4B10-42D8-AEE2-3444225A8D1C}
@@ -9,6 +11,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DominionDLL", "DominionDLL\DominionDLL.vcxproj", "{A1FD2443-4B10-42D8-AEE2-3444225A8D1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingGrounds", "TestingGrounds\TestingGrounds.csproj", "{4633759E-0685-4DF0-A3C7-0747C9847350}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE56CF6E-25FA-4B1B-B87D-698DA7135B9E}"
+	ProjectSection(SolutionItems) = preProject
+		REFERENCE.txt = REFERENCE.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
