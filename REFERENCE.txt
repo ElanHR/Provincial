@@ -3,3 +3,5 @@ metaTestChamber - where tournament is started, contains and runs a number of tes
 TestChamber - creates and 
 
 ConfigWindow.cs ln362  - runTournament launch code
+
+modify line 65 of app.cpp so that we pit their AI against ours
