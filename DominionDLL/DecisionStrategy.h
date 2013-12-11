@@ -1,4 +1,3 @@
-
 //Build a vector of features
 typedef struct StateFeature{
 	bool enabled;
@@ -57,6 +56,7 @@ enum Decisions{
 	//PREFER_BUY_FIRST_WITCH, PREFER_BUY_FIRST_MOAT,
 	//PREFER_BUY_PROVINCES, PREFER_BUY_DUCHIES, PREFER_BUY_ESTATES,
 	//PREFER_BUY_GOLD, PREFER_BUY_SILVER, PREFER_BUY_COPPER
+	NUM_DECISIONS
 };
 
 enum StateFeatures {
@@ -77,6 +77,9 @@ enum StateFeatures {
 	HAS_THIRTEEN_BUYING_POWER,
 	HAS_FOURTEEN_BUYING_POWER,
 	HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
+
+
+	NUM_FEATURES //
 };
 
 class DecisionStrategy
@@ -88,5 +91,6 @@ public:
 	DecisionStrategy* Mutate() const;
 	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 private:
+	Vector<Vector<StateFeature>>* _decisionWeights;
 
 };

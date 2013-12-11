@@ -94,8 +94,7 @@ private:
     UINT DiscardableCardCount(const State &s) const;
 
 	
-
-	Vector<Vector<StateFeature>> _decisionWeights;
+	const DecisionStrategy* _strategy;
     const BuyAgenda *_buyAgenda;
     int _remodelGoldThreshold;
 
