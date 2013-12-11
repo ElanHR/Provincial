@@ -1,9 +1,11 @@
 #include "Main.h"
 
 /// Create a player given a Buy Agenda! 
-PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda)
+PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy)
 {
     _buyAgenda = agenda;
+	_strategy = strategy;
+
     _remodelGoldThreshold = 2;
 }
 
@@ -918,7 +920,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
 /// Creates a new Player by mutuating the buy agenda (and our decision weights agenda)
 PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
-    PlayerStateInformed *result = new PlayerStateInformed(_buyAgenda->Mutate(cards, options));
+    PlayerStateInformed *result = new PlayerStateInformed(_buyAgenda->Mutate(cards, options),_strategy->Mutate());
     if(rnd() <= 0.2)
     {
         result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);

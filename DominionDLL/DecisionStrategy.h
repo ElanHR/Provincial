@@ -98,6 +98,6 @@ public:
 	DecisionStrategy* Mutate() const;
 	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 private:
-	Vector<Vector<FeatureWeight>> _decisionWeights;
+	Vector<Vector<FeatureWeight>*>* _decisionWeights;
 
 };

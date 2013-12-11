@@ -264,6 +264,28 @@ public:
     //
     // Accessors
     //
+	__forceinline T& at (unsigned int k)
+	{
+#ifdef VECTOR_DEBUG
+		if (k >= _Length)
+		{
+			SignalError("Out-of-bounds vector access");
+		}
+#endif
+		return _Data[k];
+	}
+	__forceinline T& at (int k)
+	{
+#ifdef VECTOR_DEBUG
+		if (k < 0 || k >= int(_Length))
+		{
+			SignalError("Out-of-bounds vector access");
+		}
+#endif
+		return _Data[k];
+	}
+
+
     __forceinline T& operator [] (unsigned int k)
     {
 #ifdef VECTOR_DEBUG

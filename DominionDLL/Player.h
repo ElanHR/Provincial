@@ -64,7 +64,7 @@ private:
 class PlayerStateInformed : public Player
 {
 public:
-    PlayerStateInformed(const BuyAgenda *agenda);
+	PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
     void MakeDecision(const State &s, DecisionResponse &response);
     String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
     const BuyAgenda& Agenda() const
