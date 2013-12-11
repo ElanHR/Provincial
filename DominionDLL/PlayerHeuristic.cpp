@@ -2,7 +2,7 @@
 
 PlayerHeuristic::PlayerHeuristic(const BuyAgenda *agenda)
 {
-    _agenda = agenda;
+    _buyAgenda = agenda;
     _remodelGoldThreshold = 2;
 }
 
@@ -80,7 +80,7 @@ void PlayerHeuristic::MakeDecision(const State &s, DecisionResponse &response)
                     //
                     // Choosing a card to gain
                     //
-                    response.cards.PushEnd(_agenda->ForceBuy(s, s.decision.controllingPlayer, d.cardChoices));
+                    response.cards.PushEnd(_buyAgenda->ForceBuy(s, s.decision.controllingPlayer, d.cardChoices));
                 }
                 return;
             }
@@ -155,7 +155,7 @@ UINT PlayerHeuristic::DiscardableCardCount(const State &s) const
 bool PlayerHeuristic::CardDesired(const State &s, int player, Card *c) const
 {
     Vector<Card*> choice(1, c);
-    return (_agenda->Buy(s, player, choice) != NULL);
+    return (_buyAgenda->Buy(s, player, choice) != NULL);
 }
 
 void PlayerHeuristic::MakePhaseDecision(const State &s, DecisionResponse &response)
@@ -227,7 +227,7 @@ void PlayerHeuristic::MakePhaseDecision(const State &s, DecisionResponse &respon
     }
     else if(s.phase == PhaseBuy)
     {
-        response.singleCard = _agenda->Buy(s, player, d.cardChoices);
+        response.singleCard = _buyAgenda->Buy(s, player, d.cardChoices);
     }
     else
     {
@@ -312,7 +312,7 @@ void PlayerHeuristic::MakeBaseDecision(const State &s, DecisionResponse &respons
     }
     else if(a.name == "workshop")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "bureaucrat")
     {
@@ -320,7 +320,7 @@ void PlayerHeuristic::MakeBaseDecision(const State &s, DecisionResponse &respons
     }
     else if(a.name == "feast")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "militia")
     {
@@ -366,7 +366,7 @@ void PlayerHeuristic::MakeBaseDecision(const State &s, DecisionResponse &respons
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else
@@ -439,7 +439,7 @@ void PlayerHeuristic::MakeIntrigueDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "ironworks")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "swindler")
     {
@@ -468,7 +468,7 @@ void PlayerHeuristic::MakeIntrigueDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "saboteur")
     {
-        Card *c = _agenda->Buy(s, player, d.cardChoices);
+        Card *c = _buyAgenda->Buy(s, player, d.cardChoices);
         if(c != NULL) response.cards.PushEnd(c);
     }
     else if(a.name == "torturer")
@@ -526,7 +526,7 @@ void PlayerHeuristic::MakeIntrigueDecision(const State &s, DecisionResponse &res
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else
@@ -640,7 +640,7 @@ void PlayerHeuristic::MakeSeasideDecision(const State &s, DecisionResponse &resp
     }
     else if(a.name == "smugglers")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "explorer")
     {
@@ -802,7 +802,7 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else if(a.name == "architect")
@@ -835,7 +835,7 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
     }
     else if(a.name == "street urchin")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "trailblazer")
     {
@@ -863,7 +863,7 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
     }
     else if(a.name == "pillage")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "sepulcher")
     {
@@ -896,7 +896,7 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
 
 PlayerHeuristic* PlayerHeuristic::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
-    PlayerHeuristic *result = new PlayerHeuristic(_agenda->Mutate(cards, options));
+    PlayerHeuristic *result = new PlayerHeuristic(_buyAgenda->Mutate(cards, options));
     if(rnd() <= 0.2)
     {
         result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);

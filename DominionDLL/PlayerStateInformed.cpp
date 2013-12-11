@@ -3,7 +3,7 @@
 /// Create a player given a Buy Agenda! 
 PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda)
 {
-    _agenda = agenda;
+    _buyAgenda = agenda;
     _remodelGoldThreshold = 2;
 }
 
@@ -82,7 +82,7 @@ void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &respons
                     //
                     // Choosing a card to gain
                     //
-                    response.cards.PushEnd(_agenda->ForceBuy(s, s.decision.controllingPlayer, d.cardChoices));
+                    response.cards.PushEnd(_buyAgenda->ForceBuy(s, s.decision.controllingPlayer, d.cardChoices));
                 }
                 return;
             }
@@ -157,11 +157,11 @@ UINT PlayerStateInformed::DiscardableCardCount(const State &s) const
     return result;
 }
 
-/// Chooses which card is most desired based on the buy _Agenda
+/// Chooses which card is most desired based on the buy _buyAgenda
 bool PlayerStateInformed::CardDesired(const State &s, int player, Card *c) const
 {
     Vector<Card*> choice(1, c);
-    return (_agenda->Buy(s, player, choice) != NULL);
+    return (_buyAgenda->Buy(s, player, choice) != NULL);
 }
 
 /// 
@@ -234,7 +234,7 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
     }
     else if(s.phase == PhaseBuy)
     {
-        response.singleCard = _agenda->Buy(s, player, d.cardChoices);
+        response.singleCard = _buyAgenda->Buy(s, player, d.cardChoices);
     }
     else
     {
@@ -326,7 +326,7 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "workshop")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "bureaucrat")
     {
@@ -334,7 +334,7 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "feast")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "militia")
     {
@@ -380,7 +380,7 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else
@@ -454,7 +454,7 @@ void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse 
     }
     else if(a.name == "ironworks")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "swindler")
     {
@@ -483,7 +483,7 @@ void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse 
     }
     else if(a.name == "saboteur")
     {
-        Card *c = _agenda->Buy(s, player, d.cardChoices);
+        Card *c = _buyAgenda->Buy(s, player, d.cardChoices);
         if(c != NULL) response.cards.PushEnd(c);
     }
     else if(a.name == "torturer")
@@ -541,7 +541,7 @@ void PlayerStateInformed::MakeIntrigueDecision(const State &s, DecisionResponse 
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else
@@ -657,7 +657,7 @@ void PlayerStateInformed::MakeSeasideDecision(const State &s, DecisionResponse &
     }
     else if(a.name == "smugglers")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "explorer")
     {
@@ -821,7 +821,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
             //
             // Choosing a card to gain
             //
-            response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+            response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
         }
     }
     else if(a.name == "architect")
@@ -854,7 +854,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
     }
     else if(a.name == "street urchin")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "trailblazer")
     {
@@ -882,7 +882,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
     }
     else if(a.name == "pillage")
     {
-        response.cards.PushEnd(_agenda->ForceBuy(s, player, d.cardChoices));
+        response.cards.PushEnd(_buyAgenda->ForceBuy(s, player, d.cardChoices));
     }
     else if(a.name == "sepulcher")
     {
@@ -918,7 +918,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
 /// Creates a new Player by mutuating the buy agenda (and our decision weights agenda)
 PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
-    PlayerStateInformed *result = new PlayerStateInformed(_agenda->Mutate(cards, options));
+    PlayerStateInformed *result = new PlayerStateInformed(_buyAgenda->Mutate(cards, options));
     if(rnd() <= 0.2)
     {
         result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);

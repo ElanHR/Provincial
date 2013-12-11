@@ -27,10 +27,10 @@ class PlayerHeuristic : public Player
 public:
     PlayerHeuristic(const BuyAgenda *agenda);
     void MakeDecision(const State &s, DecisionResponse &response);
-    String ControllerName() { return "Heuristic " + _agenda->Name(); }
+    String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
     const BuyAgenda& Agenda() const
     {
-        return *_agenda;
+        return *_buyAgenda;
     }
 
     PlayerHeuristic* Mutate(const CardDatabase &cards, const GameOptions &options) const;
@@ -54,7 +54,7 @@ private:
     UINT TrashableCardCount(const State &s) const;
     UINT DiscardableCardCount(const State &s) const;
 
-    const BuyAgenda *_agenda;
+    const BuyAgenda *_buyAgenda;
     int _remodelGoldThreshold;
 };
 
@@ -66,10 +66,10 @@ class PlayerStateInformed : public Player
 public:
     PlayerStateInformed(const BuyAgenda *agenda);
     void MakeDecision(const State &s, DecisionResponse &response);
-    String ControllerName() { return "Heuristic " + _agenda->Name(); }
+    String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
     const BuyAgenda& Agenda() const
     {
-        return *_agenda;
+        return *_buyAgenda;
     }
 
     PlayerStateInformed* Mutate(const CardDatabase &cards, const GameOptions &options) const;
@@ -93,7 +93,7 @@ private:
     UINT TrashableCardCount(const State &s) const;
     UINT DiscardableCardCount(const State &s) const;
 
-    const BuyAgenda *_agenda;
+    const BuyAgenda *_buyAgenda;
     int _remodelGoldThreshold;
 
 
