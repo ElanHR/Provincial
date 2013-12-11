@@ -20,6 +20,7 @@ line 627,638 TestChamber.cpp : use our player not theirs.
 line 651 TestChamber.cpp : test function. computes winning percentage, buy ratios.
 - modify to also compute avg margin of victory?
 - why does this only compute players[0]'s buy ratio?
-
+line 115 TestChamber.cpp : Assign New leaders 
+- pass along our leaders' decision struct as we currently pass buy order
 
 modify line 65 of app.cpp so that we pit their AI against ours
