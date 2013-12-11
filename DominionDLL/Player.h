@@ -98,7 +98,7 @@ private:
     const BuyAgenda *_buyAgenda;
     int _remodelGoldThreshold;
 
-	Vector<StateFeature>* GetStateFeatureVector(const State &s);
+	//Vector<Feature>* GetStateFeatureVector(const State &s);
 };
 
 class PlayerSmart : public Player

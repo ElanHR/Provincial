@@ -1,14 +1,7 @@
 //Build a vector of features
-typedef struct StateFeature{
-	bool enabled;
-	double weight;
 
-	StateFeature() : enabled(false), weight(0.0){}
 
-	StateFeature(double myWeight) : enabled(true), weight(myWeight){}
-};
-
-enum Decisions{
+typedef enum Decisions{
 	Chancellor_DiscardDeck,
 	Chancellor_DoNothing,
 
@@ -59,7 +52,7 @@ enum Decisions{
 	NUM_DECISIONS
 };
 
-enum StateFeatures {
+typedef enum Feature{
 	OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
 	HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS, //...
 	HAS_ONE_BUYING_POWER,
@@ -79,7 +72,19 @@ enum StateFeatures {
 	HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
 
 
-	NUM_FEATURES //
+	NUM_FEATURES,
+	//
+};
+
+ struct FeatureWeight{
+	Feature type;
+	bool enabled;
+	double weight;
+
+	FeatureWeight(Feature t) : type(t), enabled(false), weight(0.0){}
+
+	FeatureWeight(Feature t, double myWeight) : type(t), enabled(true), weight(myWeight){}
+
 };
 
 class DecisionStrategy
@@ -88,9 +93,11 @@ public:
 	DecisionStrategy();
 	DecisionStrategy(DecisionStrategy &m);
 
+	double getDecisionWeight(const State &s, Decisions d);
+
 	DecisionStrategy* Mutate() const;
 	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 private:
-	Vector<Vector<StateFeature>>* _decisionWeights;
+	Vector<Vector<FeatureWeight>> _decisionWeights;
 
 };

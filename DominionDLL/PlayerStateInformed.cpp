@@ -926,11 +926,11 @@ PlayerStateInformed* PlayerStateInformed::Mutate(const CardDatabase &cards, cons
     return result;
 }
 
-Vector<PlayerStateInformed::StateFeature>* PlayerStateInformed::GetStateFeatureVector(const State &s)
-{
-	Vector<StateFeature>* features = new Vector<StateFeature>();
-
-
-
-	return features;
-}
+//Vector<PlayerStateInformed::StateFeature>* PlayerStateInformed::GetStateFeatureVector(const State &s)
+//{
+//	Vector<StateFeature>* features = new Vector<StateFeature>();
+//
+//
+//
+//	return features;
+//}
