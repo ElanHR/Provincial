@@ -16,5 +16,10 @@ line 558 TestChamber.cpp : Test Pool.
 modify it so only members of the same species compete.
 - have a list of pools.
 line 360 TestChamber.cpp : RunAllPairTests . we call this for every species now, instead of only the one pool per chamber as is.
+line 627,638 TestChamber.cpp : use our player not theirs.
+line 651 TestChamber.cpp : test function. computes winning percentage, buy ratios.
+- modify to also compute avg margin of victory?
+- why does this only compute players[0]'s buy ratio?
+
 
 modify line 65 of app.cpp so that we pit their AI against ours
