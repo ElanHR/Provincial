@@ -107,6 +107,12 @@ private:
 		StateFeature(double myWeight) : enabled(true), weight(myWeight){}
 	};
 
+	enum Decisions{
+		Chancellor_DiscardDeck,
+		Chancellor_DoNothing,
+
+	};
+
 	enum StateFeatures {
 		OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
 		HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS,
