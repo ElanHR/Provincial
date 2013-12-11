@@ -1,3 +1,5 @@
-metaTestChamber.cpp - where tournament is started
+metaTestChamber - where tournament is started, contains and runs a number of testChambers
+
+TestChamber - creates and 
 
 ConfigWindow.cs ln362  - runTournament launch code
