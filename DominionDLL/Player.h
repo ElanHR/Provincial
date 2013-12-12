@@ -1,4 +1,5 @@
 typedef enum PlayerType{
+	HUMAN_PLAYER,
 	RANDOM_PLAYER,
 	HEURISTIC_PLAYER,
 	STATEINFORMED_PLAYER
@@ -7,7 +8,7 @@ typedef enum PlayerType{
 class Player
 {
 public:
-	const PlayerType myPlayerType;
+	virtual PlayerType getPlayerType() = 0;
     virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
     virtual String ControllerName() = 0;
 };
@@ -15,6 +16,8 @@ public:
 class PlayerHuman : public Player
 {
 public:
+	PlayerType getPlayerType(){ return HUMAN_PLAYER; }
+
     void MakeDecision(const State &s, DecisionResponse &response)
     {
         SignalError("Human decisions are made from the host C# application!");
@@ -28,6 +31,10 @@ private:
 class PlayerRandom : public Player
 {
 public:
+
+	PlayerType getPlayerType(){ return RANDOM_PLAYER; }
+	const PlayerType myPlayerType = RANDOM_PLAYER;
+
     void MakeDecision(const State &s, DecisionResponse &response);
     String ControllerName() { return "Random AI"; }
 };
@@ -48,6 +55,8 @@ public:
 class PlayerHeuristic : public PlayerLearning
 {
 public:
+	PlayerType getPlayerType(){ return HEURISTIC_PLAYER; }
+
     PlayerHeuristic(const BuyAgenda *agenda);
     void MakeDecision(const State &s, DecisionResponse &response);
     String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
@@ -87,6 +96,8 @@ private:
 class PlayerStateInformed : public PlayerLearning
 {
 public:
+	PlayerType getPlayerType(){ return STATEINFORMED_PLAYER; }
+
 	//PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
 	PlayerStateInformed(const DecisionStrategy* strategy);
 
