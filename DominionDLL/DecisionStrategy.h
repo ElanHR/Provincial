@@ -55,8 +55,8 @@ typedef enum Decisions{
 typedef enum Feature{
 	MONEY_DENSITY_OF_DECK,
 	MONEY_DENSITY_OF_DECK_GREATER_THAN_1,
+	MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25,
 	MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5,
-	MONEY_DENSITY_OF_DECK_GREATER_THAN_2,
 
 	ACTION_DENSITY_OF_DECK,
 
@@ -65,14 +65,14 @@ typedef enum Feature{
 	OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
 	HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS, //...
 	
+	BUYING_POWER,
 	HAS_ONE_BUYING_POWER, HAS_TWO_BUYING_POWER, HAS_THREE_BUYING_POWER, HAS_FOUR_BUYING_POWER, HAS_FIVE_BUYING_POWER,
 	HAS_SIX_BUYING_POWER, HAS_SEVEN_BUYING_POWER, HAS_EIGHT_BUYING_POWER, HAS_NINE_BUYING_POWER, HAS_TEN_BUYING_POWER,
 	HAS_ELEVEN_BUYING_POWER, HAS_TWELVE_BUYING_POWER, HAS_THIRTEEN_BUYING_POWER, HAS_FOURTEEN_BUYING_POWER,
 	HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
 
 
-	NUM_FEATURES,
-	//
+	NUM_FEATURES
 };
 
  struct FeatureWeight{
@@ -86,15 +86,15 @@ typedef enum Feature{
 
 };
 
-class DecisionStrategy
+ class DecisionStrategy : public BuyAgendaMenu
 {
 public:
 	DecisionStrategy();
 	DecisionStrategy(DecisionStrategy &m);
 
-	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d);
+	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;
 
-	DecisionStrategy* Mutate() const;
+	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 private:
 	Vector<Vector<FeatureWeight>*>* _decisionWeights;

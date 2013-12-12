@@ -96,6 +96,7 @@ private:
 	
 	const DecisionStrategy* _strategy;
     const BuyAgenda *_buyAgenda;
+
     int _remodelGoldThreshold;
 
 	//Vector<Feature>* GetStateFeatureVector(const State &s);
