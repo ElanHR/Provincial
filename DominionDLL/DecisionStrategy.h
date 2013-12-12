@@ -1,5 +1,6 @@
 //Build a vector of features
 
+double mutateVariance = 3;
 
 typedef enum Decisions{
 	Chancellor_DiscardDeck,
@@ -101,6 +102,8 @@ public:
 	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;
 
 	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+
+	String getStringInfo() const;
 
 private:
 

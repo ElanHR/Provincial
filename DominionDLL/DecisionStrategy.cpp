@@ -1,5 +1,5 @@
 #include "Main.h"
-
+#include <random>
 
 // copying the other one, should copy 
 DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
@@ -21,6 +21,16 @@ void DecisionStrategy::Init(){
 	}
 }
 
+String DecisionStrategy::getStringInfo() const {
+	String result = "";
+	for (Vector<FeatureWeight>* v : *_decisionWeights) {
+		for (FeatureWeight f : *v) {
+			result += ("f:" + f.type) + (" wt:" + String(f.weight)); 
+		}
+	}
+	result += "\n";
+	return result;
+}
 
 double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const{
 
@@ -162,6 +172,17 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 		BuyMenuEntry &entry1 = m.entries.RandomElement();
 		BuyMenuEntry &entry2 = m.entries.RandomElement();
 		if (entry1.minCost == entry2.minCost && entry1.maxCost == entry2.maxCost && entry1.count != 99 && entry2.count != 99) Utility::Swap(entry1, entry2);
+	}
+
+	// mutate the decision strategy
+	if (rnd() <= 0.9) {
+		for (Vector<FeatureWeight>* v : *_decisionWeights) {
+			for (FeatureWeight f : *v) {
+				normal_distribution<> gauss(f.weight, mutateVariance);
+				//TODO finish nwriting mutate
+			}
+		}
+		
 	}
 
 	return new DecisionStrategy(m);
