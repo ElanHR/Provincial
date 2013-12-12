@@ -1,19 +1,26 @@
 #include "Main.h"
 
-DecisionStrategy::DecisionStrategy(){
+
+// copying the other one, should copy 
+DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
+{
+	Init(); // this should be copying the old 
+}
+
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options) : BuyAgendaMenu(cards, options)
+{
+	Init();
+}
+
+void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){
-		//Vector<FeatureWeight> curDecicion;
-		//_decisionWeights.PushEnd(curDecicion);
 
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
-		
+
 	}
 }
 
-DecisionStrategy::DecisionStrategy(DecisionStrategy &m){
-
-}
 
 double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d){
 
@@ -39,9 +46,6 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 		double featureValue = 0.0;
 		switch (f.type){
 			case MONEY_DENSITY_OF_DECK:
-				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
-				//TODO: ACTUALLY EXTRACT INFO FROM S
-
 				int totalMoney = 0;
 				//for (int i = 0; i < p.deck.Length; i++){
 				//	Card *c = p.deck.at(i);
@@ -54,8 +58,6 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 				featureValue = totalMoney / p.deck.Length();
 				break;
 			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1:
-				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
-				//TODO: ACTUALLY EXTRACT INFO FROM S
 
 				int totalMoney = 0;
 				

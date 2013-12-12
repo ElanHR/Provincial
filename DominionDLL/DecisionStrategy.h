@@ -86,17 +86,26 @@ typedef enum Feature{
 
 };
 
-class DecisionStrategy
+ class DecisionStrategy : BuyAgendaMenu
 {
 public:
-	DecisionStrategy();
-	DecisionStrategy(DecisionStrategy &m);
+
+	//for copying
+	DecisionStrategy(BuyMenu &m);
+
+	// for initial creation?
+	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
+	
+
 
 	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d);
 
 	DecisionStrategy* Mutate() const;
 	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 private:
+
+	void Init();
+
 	Vector<Vector<FeatureWeight>*>* _decisionWeights;
 
 };
