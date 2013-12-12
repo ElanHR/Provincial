@@ -77,12 +77,12 @@ typedef enum Feature{
 
  struct FeatureWeight{
 	Feature type;
-	bool enabled;
+	//bool enabled;
 	double weight;
 
-	FeatureWeight(Feature t) : type(t), enabled(false), weight(0.0){}
+	FeatureWeight(Feature t) : type(t), weight(0.0){}
 
-	FeatureWeight(Feature t, double myWeight) : type(t), enabled(true), weight(myWeight){}
+	FeatureWeight(Feature t, double myWeight) : type(t),  weight(myWeight){}
 
 };
 

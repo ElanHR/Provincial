@@ -1,6 +1,13 @@
+typedef enum PlayerType{
+	RANDOM_PLAYER,
+	HEURISTIC_PLAYER,
+	STATEINFORMED_PLAYER
+};
+
 class Player
 {
 public:
+	const PlayerType myPlayerType;
     virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
     virtual String ControllerName() = 0;
 };
@@ -13,6 +20,9 @@ public:
         SignalError("Human decisions are made from the host C# application!");
     }
     String ControllerName() { return "Human"; }
+
+private:
+
 };
 
 class PlayerRandom : public Player

@@ -2,6 +2,7 @@
 
 PlayerHeuristic::PlayerHeuristic(const BuyAgenda *agenda)
 {
+	myPlayerType = HEURISTIC_PLAYER;
     _buyAgenda = agenda;
     _remodelGoldThreshold = 2;
 }

@@ -4,6 +4,7 @@
 //PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy)
 PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
 {
+	myPlayerType = STATEINFORMED_PLAYER;
     //_buyAgenda = agenda;
 	_strategy = strategy;
 

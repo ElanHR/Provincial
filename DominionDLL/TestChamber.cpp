@@ -1,5 +1,7 @@
 #include "Main.h"
 
+
+
 const bool fastTestMode = false;
 
 String TestPlayer::VisualizationDescription(const Vector<Card*> &supplyCards, bool ignoreBuyID, bool ignoreCounts) const
