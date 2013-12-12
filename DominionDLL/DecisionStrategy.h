@@ -94,6 +94,7 @@ public:
 	//for copying
 	DecisionStrategy(BuyMenu &m);
 
+
 	// for initial creation?
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
 	
