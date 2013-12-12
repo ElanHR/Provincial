@@ -102,6 +102,8 @@ public:
 
 	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
+	String getStringInfo() const;
+
 private:
 
 	void Init();

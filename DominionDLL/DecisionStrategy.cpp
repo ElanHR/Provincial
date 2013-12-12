@@ -21,6 +21,16 @@ void DecisionStrategy::Init(){
 	}
 }
 
+String DecisionStrategy::getStringInfo() const {
+	String result = "";
+	for (Vector<FeatureWeight>* v : *_decisionWeights) {
+		for (FeatureWeight f : *v) {
+			result += ("f:" + f.type) + (" wt:" + String(f.weight)); 
+		}
+	}
+	result += "\n";
+	return result;
+}
 
 double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const{
 
