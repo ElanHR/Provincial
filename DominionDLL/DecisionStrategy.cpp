@@ -1,19 +1,26 @@
 #include "Main.h"
 
-DecisionStrategy::DecisionStrategy(){
+
+// copying the other one, should copy 
+DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
+{
+	Init(); // this should be copying the old 
+}
+
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options) : BuyAgendaMenu(cards, options)
+{
+	Init();
+}
+
+void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){
-		//Vector<FeatureWeight> curDecicion;
-		//_decisionWeights.PushEnd(curDecicion);
 
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
 		
 	}
 }
 
-DecisionStrategy::DecisionStrategy(DecisionStrategy &m){
-
-}
 
 double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const{
 
@@ -28,18 +35,18 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 		int player = s.decision.controllingPlayer;
 		const PlayerState &p = s.players[player];
 
-		
+
 		double featureValue = 0.0;
 
 
 
 		////////////////////////////////
 		int totalMoneyLeft = 0;
-		for (Card *c : p.deck){
-			if (c->isTreasure){
+				for (Card *c : p.deck){
+					if (c->isTreasure){
 				totalMoneyLeft += c->money;
-			}
-		}
+					}
+				}
 
 		int totalActionsLeft = 0;
 		for (Card *c : p.deck){
@@ -63,8 +70,8 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 				featureValue = (double)totalMoneyLeft / (double)p.deck.Length();
 				break;
 			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1:
-				// Boolean value if money density is greater than 1
-				featureValue = ((double)totalMoneyLeft / (double)p.deck.Length()>1) ? 1.0 : 0;
+				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
+				//TODO: ACTUALLY EXTRACT INFO FROM S
 
 				break;
 			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25:
@@ -75,16 +82,16 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 				// Boolean value if money density is greater than 1.5
 				featureValue = ((double)totalMoneyLeft / (double)p.deck.Length()>1.5) ? 1.0 : 0;
 				break;
-
+				
 			case ACTION_DENSITY_OF_DECK:
 
 				featureValue = (double)totalActionsLeft / (double)p.deck.Length();
 				break;
 			case VICTORY_DENSITY_OF_DECK:
-
+				
 				featureValue = (double)totalVictoryCardsAndCursesLeft / (double)p.deck.Length();
 				break;
-			
+
 			case BUYING_POWER:
 
 				featureValue = p.MoneyTotal();

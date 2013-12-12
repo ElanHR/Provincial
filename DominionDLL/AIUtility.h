@@ -7,9 +7,9 @@ public:
     static void SelectCards(const State &s, DecisionResponse &response, const function<double(Card*)> &scoringFunction);
     static Card* BestCard(const Vector<Card*> &choices, const function<double(Card*)> &scoringFunction, double minScore);
     
-    static PlayerHeuristic* MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB);
-    static PlayerHeuristic* MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b);
-    static PlayerHeuristic* MakeRandomPlayer(const CardDatabase &cards);
+    static Player* MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB);
+	static PlayerLearning* MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b);
+    static Player* MakeRandomPlayer(const CardDatabase &cards);
     
     static void AdvanceAIs(DominionGame &game);
 

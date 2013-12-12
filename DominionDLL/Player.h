@@ -1,6 +1,14 @@
+typedef enum PlayerType{
+	HUMAN_PLAYER,
+	RANDOM_PLAYER,
+	HEURISTIC_PLAYER,
+	STATEINFORMED_PLAYER
+};
+
 class Player
 {
 public:
+	virtual PlayerType getPlayerType() = 0;
     virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
     virtual String ControllerName() = 0;
 };
@@ -8,23 +16,47 @@ public:
 class PlayerHuman : public Player
 {
 public:
+	PlayerType getPlayerType(){ return HUMAN_PLAYER; }
+
     void MakeDecision(const State &s, DecisionResponse &response)
     {
         SignalError("Human decisions are made from the host C# application!");
     }
     String ControllerName() { return "Human"; }
+
+private:
+
 };
 
 class PlayerRandom : public Player
 {
 public:
+
+	PlayerType getPlayerType(){ return RANDOM_PLAYER; }
+	const PlayerType myPlayerType = RANDOM_PLAYER;
+
     void MakeDecision(const State &s, DecisionResponse &response);
     String ControllerName() { return "Random AI"; }
 };
 
-class PlayerHeuristic : public Player
+class PlayerLearning: public Player
 {
 public:
+	//LearningPlayer(const BuyAgenda *agenda);
+	virtual ~PlayerLearning() {}
+	
+	virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
+	virtual String ControllerName() = 0;
+	virtual const BuyAgenda& Agenda() const = 0;
+	virtual PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const = 0;
+
+};
+
+class PlayerHeuristic : public PlayerLearning
+{
+public:
+	PlayerType getPlayerType(){ return HEURISTIC_PLAYER; }
+
     PlayerHeuristic(const BuyAgenda *agenda);
     void MakeDecision(const State &s, DecisionResponse &response);
     String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
@@ -33,7 +65,7 @@ public:
         return *_buyAgenda;
     }
 
-    PlayerHeuristic* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
 private:
     bool CardDesired(const State &s, int player, Card *c) const;
@@ -61,20 +93,24 @@ private:
 
 
 
-class PlayerStateInformed : public Player
+class PlayerStateInformed : public PlayerLearning
 {
 public:
-	PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
+	PlayerType getPlayerType(){ return STATEINFORMED_PLAYER; }
+
+	//PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
+	PlayerStateInformed(const DecisionStrategy* strategy);
+
     void MakeDecision(const State &s, DecisionResponse &response);
-    String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
+	String ControllerName() { return "StateInformed " + _strategy->Name(); }
     const BuyAgenda& Agenda() const
     {
-        return *_buyAgenda;
+		return *_strategy;
     }
 
-    PlayerStateInformed* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
-private:
+protected:
     bool CardDesired(const State &s, int player, Card *c) const;
     void MakePhaseDecision(const State &s, DecisionResponse &response);
     void MakeBaseDecision(const State &s, DecisionResponse &response);
@@ -95,7 +131,7 @@ private:
 
 	
 	const DecisionStrategy* _strategy;
-    const BuyAgenda *_buyAgenda;
+    //const BuyAgenda *_buyAgenda;
 
     int _remodelGoldThreshold;
 

@@ -62,14 +62,14 @@ typedef enum Feature{
 
 	VICTORY_DENSITY_OF_DECK,
 
-	OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
-	HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS, //...
+	//OPPONENT_HAS_ATTACK_CARDS, OPPONENT_HAS_MORE_THAN_THREE_ATTACK_CARDS,
+	//HAS_AVAILABLE_ACTIONS, HAS_TWO_AVAILABLE_ACTIONS, HAS_THREE_AVAILABLE_ACTIONS, //...
 	
 	BUYING_POWER,
-	HAS_ONE_BUYING_POWER, HAS_TWO_BUYING_POWER, HAS_THREE_BUYING_POWER, HAS_FOUR_BUYING_POWER, HAS_FIVE_BUYING_POWER,
-	HAS_SIX_BUYING_POWER, HAS_SEVEN_BUYING_POWER, HAS_EIGHT_BUYING_POWER, HAS_NINE_BUYING_POWER, HAS_TEN_BUYING_POWER,
-	HAS_ELEVEN_BUYING_POWER, HAS_TWELVE_BUYING_POWER, HAS_THIRTEEN_BUYING_POWER, HAS_FOURTEEN_BUYING_POWER,
-	HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
+	//HAS_ONE_BUYING_POWER, HAS_TWO_BUYING_POWER, HAS_THREE_BUYING_POWER, HAS_FOUR_BUYING_POWER, HAS_FIVE_BUYING_POWER,
+	//HAS_SIX_BUYING_POWER, HAS_SEVEN_BUYING_POWER, HAS_EIGHT_BUYING_POWER, HAS_NINE_BUYING_POWER, HAS_TEN_BUYING_POWER,
+	//HAS_ELEVEN_BUYING_POWER, HAS_TWELVE_BUYING_POWER, HAS_THIRTEEN_BUYING_POWER, HAS_FOURTEEN_BUYING_POWER,
+	//HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
 
 
 	NUM_FEATURES
@@ -77,26 +77,35 @@ typedef enum Feature{
 
  struct FeatureWeight{
 	Feature type;
-	bool enabled;
+	//bool enabled;
 	double weight;
 
-	FeatureWeight(Feature t) : type(t), enabled(false), weight(0.0){}
+	FeatureWeight(Feature t) : type(t), weight(0.0){}
 
-	FeatureWeight(Feature t, double myWeight) : type(t), enabled(true), weight(myWeight){}
+	FeatureWeight(Feature t, double myWeight) : type(t),  weight(myWeight){}
 
 };
 
  class DecisionStrategy : public BuyAgendaMenu
 {
 public:
-	DecisionStrategy();
-	DecisionStrategy(DecisionStrategy &m);
+
+	//for copying
+	DecisionStrategy(BuyMenu &m);
+
+	// for initial creation?
+	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
+	
+
 
 	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;
 
 	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
-	//DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+
 private:
+
+	void Init();
+
 	Vector<Vector<FeatureWeight>*>* _decisionWeights;
 
 };

@@ -80,7 +80,7 @@ public:
         return _m;
     }
 
-private:
+protected:
     void InitMenu(const CardDatabase &cards, const GameOptions &options);
     BuyMenu _m;
 };

@@ -45,18 +45,18 @@ struct TestResult
 
 struct TestPlayer
 {
-    TestPlayer(PlayerHeuristic *_p)
+	TestPlayer(PlayerLearning *_p)
     {
         p = _p;
         rating = 0.0;
     }
-    TestPlayer(PlayerHeuristic *_p, double _rating)
+	TestPlayer(PlayerLearning *_p, double _rating)
     {
         p = _p;
         rating = _rating;
     }
     String VisualizationDescription(const Vector<Card*> &supplyCards, bool ignoreBuyID, bool ignoreCounts = false) const;
-    PlayerHeuristic *p;
+	PlayerLearning *p;
     double rating;
     String buyID;
 };

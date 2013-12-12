@@ -894,7 +894,7 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
     }
 }
 
-PlayerHeuristic* PlayerHeuristic::Mutate(const CardDatabase &cards, const GameOptions &options) const
+PlayerLearning* PlayerHeuristic::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
     PlayerHeuristic *result = new PlayerHeuristic(_buyAgenda->Mutate(cards, options));
     if(rnd() <= 0.2)

@@ -29,6 +29,7 @@ UINT32 App::ProcessCommand(const String &command)
         playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHuman));
         //playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaExpensiveNovelties)));
         playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaExpensiveNovelties)));
+		//playerList.PushEnd(PlayerInfo(1, "Charles", new PlayerStateInformed(new BuyAgendaExpensiveNovelties)));
 
         logging = true;
         decisionText = true;
