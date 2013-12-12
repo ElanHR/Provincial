@@ -1,5 +1,6 @@
 //Build a vector of features
 
+double mutateVariance = 3;
 
 typedef enum Decisions{
 	Chancellor_DiscardDeck,
