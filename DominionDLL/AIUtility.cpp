@@ -46,7 +46,7 @@ void AIUtility::AdvanceAIs(DominionGame &game)
     }
 }
 
-PlayerHeuristic* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB)
+Player* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB)
 {
     Card *a = NULL, *b = NULL;
     if(cardA.Length() > 0) a = cards.GetCard(cardA);
@@ -54,7 +54,7 @@ PlayerHeuristic* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, const S
     return MakeTwoCardPlayer(cards, a, b);
 }
 
-PlayerHeuristic* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b)
+PlayerLearning* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b)
 {
     BuyMenu menu;
     menu.duchyBuyThreshold = 3;

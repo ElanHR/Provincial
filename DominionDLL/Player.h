@@ -22,7 +22,20 @@ public:
     String ControllerName() { return "Random AI"; }
 };
 
-class PlayerHeuristic : public Player
+class PlayerLearning: public Player
+{
+public:
+	//LearningPlayer(const BuyAgenda *agenda);
+	virtual ~PlayerLearning() {}
+	
+	virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
+	virtual String ControllerName() = 0;
+	virtual const BuyAgenda& Agenda() const = 0;
+	virtual PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const = 0;
+
+};
+
+class PlayerHeuristic : public PlayerLearning
 {
 public:
     PlayerHeuristic(const BuyAgenda *agenda);
@@ -33,7 +46,7 @@ public:
         return *_buyAgenda;
     }
 
-    PlayerHeuristic* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
 private:
     bool CardDesired(const State &s, int player, Card *c) const;
@@ -61,20 +74,22 @@ private:
 
 
 
-class PlayerStateInformed : public Player
+class PlayerStateInformed : public PlayerLearning
 {
 public:
-	PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
+	//PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
+	PlayerStateInformed(const DecisionStrategy* strategy);
+
     void MakeDecision(const State &s, DecisionResponse &response);
-    String ControllerName() { return "Heuristic " + _buyAgenda->Name(); }
+	String ControllerName() { return "StateInformed " + _strategy->Name(); }
     const BuyAgenda& Agenda() const
     {
-        return *_buyAgenda;
+		return *_strategy;
     }
 
-    PlayerStateInformed* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
-private:
+protected:
     bool CardDesired(const State &s, int player, Card *c) const;
     void MakePhaseDecision(const State &s, DecisionResponse &response);
     void MakeBaseDecision(const State &s, DecisionResponse &response);
@@ -95,7 +110,8 @@ private:
 
 	
 	const DecisionStrategy* _strategy;
-    const BuyAgenda *_buyAgenda;
+    //const BuyAgenda *_buyAgenda;
+
     int _remodelGoldThreshold;
 
 	//Vector<Feature>* GetStateFeatureVector(const State &s);
