@@ -2,6 +2,8 @@
 
 /// Create a player given a Buy Agenda! 
 //PlayerStateInformed::PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy)
+
+
 PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
 {
     //_buyAgenda = agenda;

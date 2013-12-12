@@ -46,15 +46,15 @@ void AIUtility::AdvanceAIs(DominionGame &game)
     }
 }
 
-Player* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB)
+Player* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB, PlayerType type)
 {
     Card *a = NULL, *b = NULL;
     if(cardA.Length() > 0) a = cards.GetCard(cardA);
     if(cardB.Length() > 0) b = cards.GetCard(cardB);
-    return MakeTwoCardPlayer(cards, a, b);
+    return MakeTwoCardPlayer(cards, a, b,type);
 }
 
-PlayerLearning* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b)
+PlayerLearning* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b, PlayerType type)
 {
     BuyMenu menu;
     menu.duchyBuyThreshold = 3;
@@ -69,7 +69,15 @@ PlayerLearning* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a,
     if(b != NULL) menu.entries.PushEnd(BuyMenuEntry(b, 1, 0, 11));
     menu.entries.PushEnd(BuyMenuEntry(cards.GetCard("silver"), 99, 3, 3));
 
-    return new PlayerHeuristic(new BuyAgendaMenu(menu));
+	if (type == HEURISTIC_PLAYER){
+		return new PlayerHeuristic(new BuyAgendaMenu(menu));
+	}
+	else if (type == STATEINFORMED_PLAYER){
+		return new PlayerStateInformed(new BuyAgendaMenu(menu));
+	}
+	else{
+		return NULL;
+	}
 }
 
 CardCounter::CardCounter(const PlayerState &p)

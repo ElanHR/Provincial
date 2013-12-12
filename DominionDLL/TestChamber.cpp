@@ -39,7 +39,9 @@ void TestChamberTask::Run(ThreadLocalStorage *threadLocalStorage)
     //int randomSeed = Utility::Hash32((int)&threadLocalStorage);
     //Sleep(randomSeed % 3 + rand() % 3);
 
-    *result = chamber->Test(*cards, params, false);
+
+	//TODO:
+    *result = chamber->Test(*cards, params,HEURISTIC_PLAYER, false);
 }
 
 void TestChamber::FreeMemory()
@@ -164,7 +166,18 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards)
         if(!newLeaderFound)
         {
             Console::WriteLine("No leader found!");
-            TestPlayer *newPlayer = new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(cards, _gameOptions)));
+
+
+			TestPlayer *newPlayer;
+			if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+				newPlayer = new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(cards, _gameOptions)));
+			else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(new BuyAgendaMenu(cards, _gameOptions))));
+			}
+			else{
+				newPlayer = NULL;
+			}
+
             newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
             _leaders.PushEnd(newPlayer);
         }
@@ -214,7 +227,13 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                     //
                     BuyMenu menuCopy = menu;
                     menuCopy.entries[menuIndex].count = 0;
-                    newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+
+					if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+					else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+						newPool.PushEnd(new TestPlayer(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(new BuyAgendaMenu(menuCopy))))));
+					}else{}
+
 
                     //
                     // Adjust count of current menu entry
@@ -226,7 +245,13 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                         {
                             BuyMenu menuCopy = menu;
                             menuCopy.entries[menuIndex].count = newCount;
-                            newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+
+							if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+								newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+							else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+								newPool.PushEnd(new TestPlayer(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(new BuyAgendaMenu(menuCopy))))));
+							}else{}
+                            
                         }
                     }
 
@@ -244,7 +269,15 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                                 BuyMenu menuCopy = menu;
                                 menuCopy.entries[menuIndex].c = c;
                                 menuCopy.entries[menuIndex].count = cardCountList[countIndex];
-                                newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+
+
+
+								if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+									newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
+								else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+									newPool.PushEnd(new TestPlayer(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(new BuyAgendaMenu(menuCopy))))));
+								}else{}
+                                
                             }
                         }
                     }
@@ -650,8 +683,11 @@ void TestChamber::InitializePool(const CardDatabase &cards)
     }*/
 }
 
-TestResult TestChamber::Test(const CardDatabase &cards, const TestParameters &params, bool useConsole)
+TestResult TestChamber::Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested,bool useConsole)
 {
+
+	_playerTypeToBeTested = playerTypeToBeTested;
+
 #ifndef LOGGING_CONSTANT
     logging = false;
     decisionText = false;

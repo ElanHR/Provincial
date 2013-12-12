@@ -67,7 +67,7 @@ public:
     void FreeMemory();
     void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix);
     void StrategizeStep(const CardDatabase &cards);
-    TestResult Test(const CardDatabase &cards, const TestParameters &params, bool useConsole=true);
+    TestResult Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested, bool useConsole=true);
 
 private:
     friend class MetaTestChamber;
@@ -100,6 +100,8 @@ private:
     String _metaSuffix;
     int _generation;
     String _directory;
+
+	PlayerType _playerTypeToBeTested;
 };
 
 struct TestChamberTask : public WorkerThreadTask

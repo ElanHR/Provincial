@@ -82,9 +82,35 @@ UINT32 App::ProcessCommand(const String &command)
         params.players[0] = playerList[0].controller;
         params.players[1] = playerList[1].controller;
         params.options = _game.data().options;
-        TestResult result = chamber.Test(_cards, params);
+
+		//TODO: 
+        TestResult result = chamber.Test(_cards, params,HEURISTIC_PLAYER);
         _AITestResult = result.winRatio[0];
     }
+	else if (parameters[0] == "testAIs")
+	{
+		Vector<PlayerInfo> playerList;
+
+		playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
+		playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+
+		logging = true;
+		decisionText = true;
+		_game.NewGame(playerList, _options);
+		AIUtility::AdvanceAIs(_game);
+
+		TestChamber chamber;
+		TestParameters params;
+		params.minGameCount = 10000;
+		params.maxGameCount = 10000;
+		params.players[0] = playerList[0].controller;
+		params.players[1] = playerList[1].controller;
+		params.options = _game.data().options;
+
+		//TODO: 
+		TestResult result = chamber.Test(_cards, params, STATEINFORMED_PLAYER);
+		_AITestResult = result.winRatio[0];
+	}
     else if(parameters[0] == "response")
     {
         auto &d = _game.state().decision;

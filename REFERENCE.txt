@@ -26,3 +26,7 @@ line 115 TestChamber.cpp : Assign New leaders
 
 
 modify line 65 of app.cpp so that we pit their AI against ours
+
+
+
+Test thread kicked off at TestChamper.cpp ln 41

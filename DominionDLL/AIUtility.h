@@ -7,8 +7,8 @@ public:
     static void SelectCards(const State &s, DecisionResponse &response, const function<double(Card*)> &scoringFunction);
     static Card* BestCard(const Vector<Card*> &choices, const function<double(Card*)> &scoringFunction, double minScore);
     
-    static Player* MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB);
-	static PlayerLearning* MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b);
+	static Player* MakeTwoCardPlayer(const CardDatabase &cards, const String &cardA, const String &cardB, PlayerType type);
+	static PlayerLearning* MakeTwoCardPlayer(const CardDatabase &cards, Card *a, Card *b, PlayerType type);
     static Player* MakeRandomPlayer(const CardDatabase &cards);
     
     static void AdvanceAIs(DominionGame &game);
