@@ -382,7 +382,7 @@ void TestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playerTyp
 {
     Assert(_pool.Length() != 0, "StrategizeStart not called");
 
-    Console::WriteLine("Testing generation " + String(_generation) + _metaSuffix);
+    Console::WriteLine("Testing generation " + String(_generation) + _metaSuffix + " using player type:" + String(playerType));
     
     //
     // Run all AIs in the current pool against the leaders
@@ -396,7 +396,7 @@ void TestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playerTyp
     //
     _pool.Sort([](const TestPlayer *a, const TestPlayer *b) { return a->rating > b->rating; });
 
-    Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%");
+	Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%" + " using player type:" + String(playerType));
     Console::WriteLine(_pool[0]->VisualizationDescription(_supplyCards, true));
 
 	AssignNewLeaders(cards, playerType);
