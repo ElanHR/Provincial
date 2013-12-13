@@ -1,5 +1,11 @@
 #include "Main.h"
 
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) : BuyAgendaMenu(cards, s){
+	Init();
+}
+
+
+
 // copying the other one, should copy 
 DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
 {

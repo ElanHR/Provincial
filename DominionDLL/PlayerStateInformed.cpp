@@ -6,6 +6,9 @@
 
 PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
 {
+
+	Console::WriteLine("PlayerStateInformed generation " );
+
     //_buyAgenda = agenda;
 	_strategy = strategy;
 

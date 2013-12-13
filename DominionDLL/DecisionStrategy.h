@@ -1,5 +1,6 @@
 //Build a vector of features
 #include <random>
+#include "Main.h"
 
 static double mutateVariance = 3, initVariance = 20;
 const static int initialNumFeaturesPerDecision = 3;
@@ -101,9 +102,12 @@ typedef enum Feature{
 {
 public:
 
-	//for copying
+
+	DecisionStrategy(const CardDatabase &cards, const String &s);
+
+
+
 	DecisionStrategy(BuyMenu &m);
-	//for copying
 	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
 
 
