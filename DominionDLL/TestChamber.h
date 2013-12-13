@@ -65,8 +65,9 @@ class TestChamber
 {
 public:
     void FreeMemory();
-    void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix);
-    void StrategizeStep(const CardDatabase &cards);
+	void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType);
+	void StrategizeStep(const CardDatabase &cards, PlayerType playerType);
+
     TestResult Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested, bool useConsole=true);
 
 private:
@@ -74,12 +75,12 @@ private:
     void ComputeCounters(const CardDatabase &cards, const String &filename);
     void ComputeProgression(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
     void ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
-    void InitializePool(const CardDatabase &cards);
+	void InitializePool(const CardDatabase &cards, PlayerType playerType);
     Grid<TestResult> TestPool(const CardDatabase &cards, const String &filename);
 
     void AssignBuyIDs(const Grid<TestResult> &poolResults);
-    void AssignNewLeaders(const CardDatabase &cards);
-    void GenerateNewPool(const CardDatabase &cards);
+	void AssignNewLeaders(const CardDatabase &cards, PlayerType playerType);
+	void GenerateNewPool(const CardDatabase &cards, PlayerType playerType);
     void SaveVisualizationFiles(const CardDatabase &cards);
 
     Grid<TestResult> RunAllPairsTests(const CardDatabase &cards, const Vector<TestPlayer*> &playersA, const Vector<TestPlayer*> &playersB, UINT minGameCount, UINT maxGameCount);
@@ -101,7 +102,6 @@ private:
     int _generation;
     String _directory;
 
-	PlayerType _playerTypeToBeTested;
 };
 
 struct TestChamberTask : public WorkerThreadTask

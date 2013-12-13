@@ -166,11 +166,11 @@ UINT32 App::ProcessCommand(const String &command)
         GameOptions options;
         if(_game.data().options.supplyPiles.Length() == 0) options.RandomizeSupplyPiles(_cards);
         else options = _game.data().options;
-        _chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger());
+        _chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(),STATEINFORMED_PLAYER);
     }
     else if(parameters[0] == "trainAIStep")
     {
-        _chamber.StrategizeStep(_cards);
+		_chamber.StrategizeStep(_cards, STATEINFORMED_PLAYER);
     }
     return 0;
 }

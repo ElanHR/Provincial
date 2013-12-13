@@ -47,7 +47,8 @@ void TestChamberTask::Run(ThreadLocalStorage *threadLocalStorage)
 
 
 	//TODO:
-    *result = chamber->Test(*cards, params,HEURISTIC_PLAYER, false);
+
+    *result = chamber->Test(*cards, params,STATEINFORMED_PLAYER, false);
 }
 
 void TestChamber::FreeMemory()
@@ -62,7 +63,7 @@ void TestChamber::FreeMemory()
     _generation = 1;
 }
 
-void TestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix)
+void TestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType)
 {
     FreeMemory();
     _gameOptions = options;
@@ -96,7 +97,7 @@ void TestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &
     //
     // Start the pool and leaders with variations on big money
     //
-    InitializePool(cards);
+	InitializePool(cards, playerType);
     while(_leaders.Length() < _parameters.leaderCount)
     {
         _leaders.PushEnd(_pool.RandomElement());
@@ -122,7 +123,7 @@ void TestChamber::AssignBuyIDs(const Grid<TestResult> &poolResults)
     }
 }
 
-void TestChamber::AssignNewLeaders(const CardDatabase &cards)
+void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerType)
 {
     _leaders.FreeMemory();
     const UINT supplyCount = _supplyCards.Length();
@@ -175,9 +176,9 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards)
 
 
 			TestPlayer *newPlayer;
-			if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+			if (playerType == HEURISTIC_PLAYER)
 				newPlayer = new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(cards, _gameOptions)));
-			else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+			else if (playerType == STATEINFORMED_PLAYER){
 				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions)));
 			}else{	newPlayer = NULL;}
 
@@ -187,7 +188,7 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards)
     }
 }
 
-void TestChamber::GenerateNewPool(const CardDatabase &cards)
+void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerType)
 {
     _pool.FreeMemory();
     for(UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++) _pool.PushEnd(_leaders[leaderIndex]);
@@ -231,9 +232,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                     BuyMenu menuCopy = menu;
                     menuCopy.entries[menuIndex].count = 0;
 
-					if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+					if (playerType == HEURISTIC_PLAYER)
 						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+					else if (playerType == STATEINFORMED_PLAYER){
 						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
 					}else{}
 
@@ -249,9 +250,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                             BuyMenu menuCopy = menu;
                             menuCopy.entries[menuIndex].count = newCount;
 
-							if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+							if (playerType == HEURISTIC_PLAYER)
 								newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-							else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+							else if (playerType == STATEINFORMED_PLAYER){
 								newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
 							}else{}
                             
@@ -275,9 +276,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
 
 
 
-								if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+								if (playerType == HEURISTIC_PLAYER)
 									newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-								else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+								else if (playerType == STATEINFORMED_PLAYER){
 									newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
 								}else{}
                                 
@@ -299,9 +300,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                     BuyMenu menuCopy = menu;
                     menuCopy.estateBuyThreshold = newEstateCount;
 
-					if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+					if (playerType == HEURISTIC_PLAYER)
 						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+					else if (playerType == STATEINFORMED_PLAYER){
 						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
 					}
 					else{}
@@ -313,9 +314,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards)
                     BuyMenu menuCopy = menu;
                     menuCopy.duchyBuyThreshold = newDuchyCount;
 
-					if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+					if (playerType == HEURISTIC_PLAYER)
 						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+					else if (playerType == STATEINFORMED_PLAYER){
 						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
 					}
 					else{}
@@ -377,7 +378,7 @@ void TestChamber::SaveVisualizationFiles(const CardDatabase &cards)
     }
 }
 
-void TestChamber::StrategizeStep(const CardDatabase &cards)
+void TestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playerType)
 {
     Assert(_pool.Length() != 0, "StrategizeStart not called");
 
@@ -398,9 +399,9 @@ void TestChamber::StrategizeStep(const CardDatabase &cards)
     Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%");
     Console::WriteLine(_pool[0]->VisualizationDescription(_supplyCards, true));
 
-    AssignNewLeaders(cards);
+	AssignNewLeaders(cards, playerType);
 
-    GenerateNewPool(cards);
+	GenerateNewPool(cards, playerType);
 
     SaveVisualizationFiles(cards);
 
@@ -659,7 +660,7 @@ Grid<TestResult> TestChamber::TestPool(const CardDatabase &cards, const String &
     return allResults;
 }
 
-void TestChamber::InitializePool(const CardDatabase &cards)
+void TestChamber::InitializePool(const CardDatabase &cards, PlayerType playerType)
 {
     _pool.FreeMemory();
     for(UINT supplyIndexA = 0; supplyIndexA < 11; supplyIndexA++)
@@ -676,9 +677,9 @@ void TestChamber::InitializePool(const CardDatabase &cards)
 
 
 			TestPlayer *newPlayer;
-			if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+			if (playerType == HEURISTIC_PLAYER)
 				newPlayer = new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(cards, _gameOptions)));
-			else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+			else if (playerType == STATEINFORMED_PLAYER){
 				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions)));
 			}
 			else{ newPlayer = NULL; }
@@ -695,9 +696,9 @@ void TestChamber::InitializePool(const CardDatabase &cards)
         if(supplyIndexA > 0) a = _gameOptions.supplyPiles[supplyIndexA - 1];
 		if (supplyIndexA == 0){
 
-			if (_playerTypeToBeTested == HEURISTIC_PLAYER)
+			if (playerType == HEURISTIC_PLAYER)
 				_bestLeaderHistory.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(cards, _gameOptions, a, NULL))));
-			else if (_playerTypeToBeTested == STATEINFORMED_PLAYER){
+			else if (playerType == STATEINFORMED_PLAYER){
 				_bestLeaderHistory.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions, a, NULL))));
 			}
 			else{}
@@ -717,8 +718,6 @@ void TestChamber::InitializePool(const CardDatabase &cards)
 
 TestResult TestChamber::Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested,bool useConsole)
 {
-
-	_playerTypeToBeTested = playerTypeToBeTested;
 
 #ifndef LOGGING_CONSTANT
     logging = false;

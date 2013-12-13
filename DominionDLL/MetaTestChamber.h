@@ -1,9 +1,10 @@
+#include "Main.h"
 
 class MetaTestChamber
 {
 public:
-    void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount);
-    void StrategizeStep(const CardDatabase &cards);
+	void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, PlayerType playerType);
+	void StrategizeStep(const CardDatabase &cards, PlayerType playerType);
 
 private:
 
