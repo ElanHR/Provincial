@@ -4,13 +4,13 @@ TestChamber - creates and
 
 ConfigWindow.cs ln362  - runTournament launch code
 
-init our player with a vector of random feature weights
-write mutate function
+init our player with a vector of random feature weights -- done!
+write mutate function -- done!
 call when incrementing generations (TestChamber.StrategizeStep ? ln 330)
 increase generational count so that there's enough time for evolution
 also when increasing generations, compute divergence and speciate
 
-line 5 TestChamber.cpp : VisualizationDescription
+line 5 TestChamber.cpp : VisualizationDescription -- done!
 - modify it so it displays our features / weights as well.
 line 558 TestChamber.cpp : Test Pool.
 modify it so only members of the same species compete.
