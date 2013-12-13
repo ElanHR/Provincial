@@ -103,6 +103,7 @@
             this.timerCheckProgress = new System.Windows.Forms.Timer(this.components);
             this.label33 = new System.Windows.Forms.Label();
             this.labelLink = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -554,9 +555,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.buttonVisualizeAll);
             this.groupBox1.Controls.Add(this.buttonRunTournament);
-            this.groupBox1.Controls.Add(this.labelLeaderboard);
             this.groupBox1.Controls.Add(this.buttonShowLeaderboard);
             this.groupBox1.Controls.Add(this.textBoxChambers);
             this.groupBox1.Controls.Add(this.label9);
@@ -576,7 +577,7 @@
             this.labelLeaderboard.AutoSize = true;
             this.labelLeaderboard.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelLeaderboard.ForeColor = System.Drawing.Color.Blue;
-            this.labelLeaderboard.Location = new System.Drawing.Point(6, 119);
+            this.labelLeaderboard.Location = new System.Drawing.Point(1028, 656);
             this.labelLeaderboard.Name = "labelLeaderboard";
             this.labelLeaderboard.Size = new System.Drawing.Size(186, 19);
             this.labelLeaderboard.TabIndex = 20;
@@ -853,13 +854,24 @@
             this.labelLink.Text = "graphics.stanford.edu/~mdfisher/DominionAI.html";
             this.labelLink.Click += new System.EventHandler(this.labelLink_Click);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(10, 117);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(288, 27);
+            this.comboBox1.TabIndex = 30;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // ConfigWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1231, 682);
+            this.ClientSize = new System.Drawing.Size(1231, 728);
             this.Controls.Add(this.label33);
             this.Controls.Add(this.label20);
+            this.Controls.Add(this.labelLeaderboard);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.label25);
@@ -1004,5 +1016,6 @@
         private System.Windows.Forms.Timer timerCheckProgress;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label labelLink;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

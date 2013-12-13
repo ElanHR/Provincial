@@ -377,11 +377,16 @@ namespace BaseCodeApp
             }
 
             int chamberCount, generationCount;
+            String playerType; 
             try
             {
                 chamberCount = Convert.ToInt32(textBoxChambers.Text.ToString());
                 generationCount = Convert.ToInt32(textBoxGenerations.Text.ToString());
                 if (chamberCount < 1 || chamberCount > 50 || generationCount < 1 || generationCount > 10000) throw new Exception();
+
+
+
+                //playerType = 
             }
             catch
             {
@@ -400,7 +405,7 @@ namespace BaseCodeApp
             if (result == DialogResult.Yes)
             {
                 activeTournamentGenerationCount = generationCount;
-                activeTournamentDirectory = Directory.GetCurrentDirectory() + "/" + parentWindow.Strategize(generationCount, chamberCount);
+                activeTournamentDirectory = Directory.GetCurrentDirectory() + "/" + parentWindow.Strategize(generationCount, chamberCount,"");
                 timerCheckProgress.Enabled = true;
                 buttonLoadAndVisualize.Enabled = false;
             }
@@ -605,6 +610,11 @@ namespace BaseCodeApp
         private void labelLink_Click(object sender, EventArgs e)
         {
             Process.Start("http://graphics.stanford.edu/~mdfisher/DominionAI.html");
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

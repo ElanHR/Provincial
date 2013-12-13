@@ -487,7 +487,7 @@ namespace BaseCodeApp
 
         }
 
-        public string Strategize(int generationCount, int chamberCount)
+        public string Strategize(int generationCount, int chamberCount,String playerType)
         {
             if (supply == null || supply.Count == 0) return "";
 
@@ -506,6 +506,8 @@ namespace BaseCodeApp
                 parameterFile.WriteLine("kingdomsIntermediate/" + directory + "/");
                 parameterFile.WriteLine("generations=" + generationCount.ToString());
                 parameterFile.WriteLine("chambers=" + chamberCount.ToString());
+                parameterFile.WriteLine("playerType=" + playerType);
+
                 parameterFile.Close();
             }
 
