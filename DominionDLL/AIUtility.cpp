@@ -73,7 +73,7 @@ PlayerLearning* AIUtility::MakeTwoCardPlayer(const CardDatabase &cards, Card *a,
 		return new PlayerHeuristic(new BuyAgendaMenu(menu));
 	}
 	else if (type == STATEINFORMED_PLAYER){
-		return new PlayerStateInformed(new BuyAgendaMenu(menu));
+		return new PlayerStateInformed(new DecisionStrategy(menu));
 	}
 	else{
 		return NULL;

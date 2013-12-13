@@ -183,15 +183,15 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 
 	// mutate the decision strategy
 	if (rnd() <= 0.9) {
-		Vector<Vector<FeatureWeight>*> dwts;
+		Vector<Vector<FeatureWeight>*>* dwts;
 		for (Vector<FeatureWeight>* v : *_decisionWeights) {
 			Vector<FeatureWeight>* vf = new Vector<FeatureWeight>();
 			for (FeatureWeight f : *v) {
 				normal_distribution<> gauss(f.weight, mutateVariance);
-				FeatureWeight *fw = new FeatureWeight(f.type, gauss(gen));
-				vf->PushEnd(*fw);
+				FeatureWeight fw(f.type, gauss(gen));
+				vf->PushEnd(fw);
 			}
-			dwts.PushEnd(vf);
+			dwts->PushEnd(vf);
 		}
 		return new DecisionStrategy(m, dwts);
 	}

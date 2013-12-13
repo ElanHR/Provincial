@@ -29,7 +29,7 @@ String TestPlayer::VisualizationDescription(const Vector<Card*> &supplyCards, bo
     }
     result.PopEnd();
 	// now print our decision strategy info
-	if (&p->getPlayerType().equals(STATEINFORMED_PLAYER)) {
+	if ( p->getPlayerType() == STATEINFORMED_PLAYER ) {
 		result += "\nDecisionStrategy:\n";
 		const DecisionStrategy *strat = dynamic_cast<const DecisionStrategy*>(&p->Agenda());
 		result += strat->getStringInfo();
