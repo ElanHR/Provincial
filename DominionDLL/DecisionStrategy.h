@@ -89,6 +89,7 @@ typedef enum Feature{
 	FeatureWeight(Feature t) : type(t), weight(0.0){}
 
 	FeatureWeight(Feature t, double myWeight) : type(t),  weight(myWeight){}
+	
 
 };
 
@@ -102,9 +103,12 @@ public:
 	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
 
 
+
+
 	// for initial creation?
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
 	
+	DecisionStrategy(const CardDatabase &cards, const GameOptions &options, Card *a, Card *b);
 
 
 	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;

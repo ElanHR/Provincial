@@ -8,8 +8,11 @@ DecisionStrategy::DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* f
 	_decisionWeights->Append(*fws);
 }
 
-DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options) : BuyAgendaMenu(cards, options)
-{
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options) : BuyAgendaMenu(cards, options){
+	Init();
+}
+
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options, Card *a, Card *b) : BuyAgendaMenu(cards, options, a, b){
 	Init();
 }
 
