@@ -101,6 +101,7 @@ public:
 	//for copying
 	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
 
+
 	// for initial creation?
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
 	
