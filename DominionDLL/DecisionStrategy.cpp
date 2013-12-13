@@ -1,10 +1,11 @@
 #include "Main.h"
-#include <random>
 
 // copying the other one, should copy 
-DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
+DecisionStrategy::DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws) : BuyAgendaMenu(m)
 {
-	Init(); // this should be copying the old 
+	Init(); // this should be copying the old
+	_decisionWeights->FreeMemory();
+	_decisionWeights->Append(*fws);
 }
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions &options) : BuyAgendaMenu(cards, options)
@@ -15,9 +16,12 @@ DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions 
 void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){
-
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
-		
+		for (int f = MONEY_DENSITY_OF_DECK; f < NUM_FEATURES; f++) {
+			Feature feature = static_cast<Feature>(f);
+			FeatureWeight *fw = new FeatureWeight(feature, initGauss(gen));
+			_decisionWeights->at(d)->PushEnd(*fw);
+		}
 	}
 }
 
@@ -176,13 +180,17 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 
 	// mutate the decision strategy
 	if (rnd() <= 0.9) {
+		Vector<Vector<FeatureWeight>*> dwts;
 		for (Vector<FeatureWeight>* v : *_decisionWeights) {
+			Vector<FeatureWeight>* vf = new Vector<FeatureWeight>();
 			for (FeatureWeight f : *v) {
 				normal_distribution<> gauss(f.weight, mutateVariance);
-				//TODO finish nwriting mutate
+				FeatureWeight *fw = new FeatureWeight(f.type, gauss(gen));
+				vf->PushEnd(*fw);
 			}
+			dwts.PushEnd(vf);
 		}
-		
+		return new DecisionStrategy(m, dwts);
 	}
 
 	return new DecisionStrategy(m);

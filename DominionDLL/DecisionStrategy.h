@@ -1,6 +1,11 @@
 //Build a vector of features
+#include <random>
 
-double mutateVariance = 3;
+static double mutateVariance = 3, initVariance = 20;
+const static int initialNumFeaturesPerDecision = 3;
+static std::random_device rd;
+static std::mt19937 gen(rd());	
+static std::normal_distribution<> initGauss(0, initVariance);
 
 typedef enum Decisions{
 	Chancellor_DiscardDeck,
@@ -93,6 +98,8 @@ public:
 
 	//for copying
 	DecisionStrategy(BuyMenu &m);
+	//for copying
+	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
 
 	// for initial creation?
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
