@@ -156,7 +156,7 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
                 {
                     if(curPlayer->buyID[supplyIndex] == '1' && leaderSupplyCounters[supplyIndex] <= 0) overusedCardFound = true;
                 }
-                if(!overusedCardFound)
+				if (!overusedCardFound || playerType == STATEINFORMED_PLAYER)
                 {
                     newLeaderFound = true;
                     _leaders.PushEnd(curPlayer);
