@@ -1,6 +1,13 @@
 #include "Main.h"
 
 // copying the other one, should copy 
+DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
+{
+	Init(); // this should be copying the old
+	_decisionWeights->FreeMemory();
+}
+
+
 DecisionStrategy::DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws) : BuyAgendaMenu(m)
 {
 	Init(); // this should be copying the old
@@ -22,8 +29,8 @@ void DecisionStrategy::Init(){
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
 		for (int f = MONEY_DENSITY_OF_DECK; f < NUM_FEATURES; f++) {
 			Feature feature = static_cast<Feature>(f);
-			FeatureWeight *fw = new FeatureWeight(feature, initGauss(gen));
-			_decisionWeights->at(d)->PushEnd(*fw);
+			FeatureWeight fw(feature, initGauss(gen));
+			_decisionWeights->at(d)->PushEnd(fw);
 		}
 	}
 }

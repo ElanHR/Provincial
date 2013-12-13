@@ -78,13 +78,17 @@ typedef enum Feature{
 	//HAS_MORE_THAN_FOURTEEN_BUYING_POWER,
 
 
-	NUM_FEATURES
+	NUM_FEATURES,
+	INVALID_FEATURE
 };
 
  struct FeatureWeight{
 	Feature type;
 	//bool enabled;
 	double weight;
+
+
+	FeatureWeight() : type(INVALID_FEATURE), weight(-1){}
 
 	FeatureWeight(Feature t) : type(t), weight(0.0){}
 
