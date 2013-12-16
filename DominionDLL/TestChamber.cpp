@@ -102,6 +102,8 @@ void TestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &
     {
         _leaders.PushEnd(_pool.RandomElement());
     }
+
+	Console::WriteLine("strategize started using player type:" + String(playerType));
 }
 
 void TestChamber::AssignBuyIDs(const Grid<TestResult> &poolResults)
