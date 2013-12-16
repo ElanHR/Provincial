@@ -102,20 +102,14 @@ typedef enum Feature{
 {
 public:
 
-
 	DecisionStrategy(const CardDatabase &cards, const String &s);
-
-
 
 	DecisionStrategy(BuyMenu &m);
 	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
 
-
-
-
 	// for initial creation?
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options);
-	
+
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options, Card *a, Card *b);
 
 

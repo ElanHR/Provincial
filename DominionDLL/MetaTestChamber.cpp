@@ -2,8 +2,12 @@
 
 void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, PlayerType playerType)
 {
-    Console::WriteLine("Strategizing for kingdom piles:");
+    Console::WriteLine("BLAAAH!!! Strategizing for kingdom piles:");
     Console::WriteLine(options.ToString());
+
+
+	Console::WriteLine("Player Type = " + String(playerType));
+
 
     Console::WriteLine("Using " + String(chamberCount) + " testing chambers");
 
