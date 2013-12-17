@@ -120,11 +120,12 @@ public:
 
 	String getStringInfo() const;
 
+	void LoadDecisionWeightsFromFile(const String &s);
+	void SaveDecisionWeightsToFile(const String &s);
 private:
 
 	void Init();
-	void LoadDecisionWeightsFromFile(const String &s);
-	void SaveDecisionWeightsToFile(const String &s);
+	
 
 
 	Vector<Vector<FeatureWeight>*>* _decisionWeights;
