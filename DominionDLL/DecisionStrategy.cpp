@@ -26,11 +26,11 @@ void DecisionStrategy::LoadDecisionWeightsFromFile(const String &s)
 
 		String cur(curLine);
 		Vector<String> partioned = cur.Partition(' ');
-		if (partioned.Length != NUM_FEATURES)
+		if (partioned.Length() != NUM_FEATURES)
 			Console::WriteLine("UHOH!!! File does not have proper number of features.");
 
 		for (int f = 0; f < NUM_FEATURES; f++){
-			_decisionWeights->at(d)->at(f).weight = partioned.at(f).ConvertToDouble;
+			_decisionWeights->at(d)->at(f).weight = partioned.at(f).ConvertToDouble();
 		}
 
 		free(curLine);
