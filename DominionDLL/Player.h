@@ -10,7 +10,7 @@ class Player
 public:
 	virtual PlayerType getPlayerType() = 0;
     virtual void MakeDecision(const State &s, DecisionResponse &response) = 0;
-    virtual String ControllerName() = 0;
+	virtual String ControllerName() = 0;
 };
 
 class PlayerHuman : public Player
@@ -49,7 +49,8 @@ public:
 	virtual String ControllerName() = 0;
 	virtual const BuyAgenda& Agenda() const = 0;
 	virtual PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const = 0;
-
+	virtual PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const = 0;
+	const static boolean _mutateOnlyDecisions = false;
 };
 
 class PlayerHeuristic : public PlayerLearning
@@ -66,6 +67,7 @@ public:
     }
 
 	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 private:
     bool CardDesired(const State &s, int player, Card *c) const;
@@ -109,6 +111,7 @@ public:
     }
 
 	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 protected:
     bool CardDesired(const State &s, int player, Card *c) const;

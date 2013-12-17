@@ -251,3 +251,26 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 
 	return new DecisionStrategy(m);
 }
+
+
+DecisionStrategy* DecisionStrategy::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const{
+	PersistentAssert(_m.entries.Length() > 0, "Empty menu");
+	BuyMenu m = _m;
+
+	// mutate the decision strategy
+	if (rnd() <= 0.9) {
+		Vector<Vector<FeatureWeight>*>* dwts = new Vector<Vector<FeatureWeight>*>();
+		for (Vector<FeatureWeight>* v : *_decisionWeights) {
+			Vector<FeatureWeight>* vf = new Vector<FeatureWeight>();
+			for (FeatureWeight f : *v) {
+				normal_distribution<> gauss(f.weight, mutateVariance);
+				FeatureWeight fw(f.type, gauss(gen));
+				vf->PushEnd(fw);
+			}
+			dwts->PushEnd(vf);
+		}
+		return new DecisionStrategy(m, dwts);
+	}
+
+	return new DecisionStrategy(m);
+}

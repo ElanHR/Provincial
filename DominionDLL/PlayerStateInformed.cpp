@@ -940,6 +940,12 @@ PlayerLearning* PlayerStateInformed::Mutate(const CardDatabase &cards, const Gam
     return result;
 }
 
+PlayerLearning* PlayerStateInformed::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
+{
+	PlayerStateInformed *result = new PlayerStateInformed(_strategy->MutateOnlyDecisions(cards, options));
+	return result;
+}
+
 //Vector<PlayerStateInformed::StateFeature>* PlayerStateInformed::GetStateFeatureVector(const State &s)
 //{
 //	Vector<StateFeature>* features = new Vector<StateFeature>();
