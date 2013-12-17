@@ -41,13 +41,18 @@ void DecisionStrategy::LoadDecisionWeightsFromFile(const String &s)
 
 void DecisionStrategy::SaveDecisionWeightsToFile(const String &s) const
 {
+	Console::WriteLine("Printing out decision file for " + s);
 	ofstream file(("decisions" + s).CString());
 
-	for (int d = 0; d < NUM_DECISIONS; d++){
-		for (int f = 0; f < NUM_FEATURES; f++){
-			file << _decisionWeights->at(d)->at(f).weight << " ";
+	if (_decisionWeights == NULL){
+		file << " DECISION_WEIGHTS IS NULL FOR " << s;
+	}else{
+		for (int d = 0; d < NUM_DECISIONS; d++){
+			for (int f = 0; f < NUM_FEATURES; f++){
+				file << _decisionWeights->at(d)->at(f).weight << " ";
+			}
+			file << endl;
 		}
-		file << endl;
 	}
 
 
