@@ -50,7 +50,7 @@ public:
 	virtual const BuyAgenda& Agenda() const = 0;
 	virtual PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const = 0;
 	virtual PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const = 0;
-	const static boolean _mutateOnlyDecisions = false;
+	const static boolean _mutateOnlyDecisions = true;
 };
 
 class PlayerHeuristic : public PlayerLearning
