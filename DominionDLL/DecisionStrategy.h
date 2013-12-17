@@ -121,7 +121,7 @@ public:
 	String getStringInfo() const;
 
 	void LoadDecisionWeightsFromFile(const String &s);
-	void SaveDecisionWeightsToFile(const String &s);
+	void SaveDecisionWeightsToFile(const String &s) const;
 private:
 
 	void Init();

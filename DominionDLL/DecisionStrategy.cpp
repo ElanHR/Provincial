@@ -39,7 +39,7 @@ void DecisionStrategy::LoadDecisionWeightsFromFile(const String &s)
 
 }
 
-void DecisionStrategy::SaveDecisionWeightsToFile(const String &s)
+void DecisionStrategy::SaveDecisionWeightsToFile(const String &s) const
 {
 	ofstream file(("decisions" + s).CString());
 
