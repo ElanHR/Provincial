@@ -129,7 +129,7 @@ protected:
     UINT TrashableCardCount(const State &s) const;
     UINT DiscardableCardCount(const State &s) const;
 
-	
+
 	const DecisionStrategy* _strategy;
     //const BuyAgenda *_buyAgenda;
 

@@ -2,6 +2,8 @@
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) : BuyAgendaMenu(cards, s){
 	Init();
+
+	//LoadDecisionWeightsFromFile(s);
 }
 
 
@@ -11,6 +13,44 @@ DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
 {
 	Init(); // this should be copying the old
 	_decisionWeights->FreeMemory();
+}
+
+
+void DecisionStrategy::LoadDecisionWeightsFromFile(const String &s)
+{
+	ifstream file(("decisions"+s).CString());
+
+	for (int d = 0; d < NUM_DECISIONS; d++){
+		char* curLine = new char[1024];
+		file.getline(curLine,1024);
+
+		String cur(curLine);
+		Vector<String> partioned = cur.Partition(' ');
+		if (partioned.Length != NUM_FEATURES)
+			Console::WriteLine("UHOH!!! File does not have proper number of features.");
+
+		for (int f = 0; f < NUM_FEATURES; f++){
+			_decisionWeights->at(d)->at(f).weight = partioned.at(f).ConvertToDouble;
+		}
+
+		free(curLine);
+	}
+	
+
+}
+
+void DecisionStrategy::SaveDecisionWeightsToFile(const String &s)
+{
+	ofstream file(("decisions" + s).CString());
+
+	for (int d = 0; d < NUM_DECISIONS; d++){
+		for (int f = 0; f < NUM_FEATURES; f++){
+			file << _decisionWeights->at(d)->at(f).weight << " ";
+		}
+		file << endl;
+	}
+
+
 }
 
 
