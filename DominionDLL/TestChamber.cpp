@@ -185,7 +185,9 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
 				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions)));
 			}else{	newPlayer = NULL;}
 			if (newPlayer->p->_mutateOnlyDecisions) {
+				Console::WriteLine("before mutating:" + newPlayer->p->Agenda().Name());
 				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+				Console::WriteLine("after mutating:" + newPlayer->p->Agenda().Name());
 			}
 			else {
 				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
@@ -208,7 +210,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerTy
             TestPlayer *parent = _leaders.RandomElement();
 			TestPlayer *mutatedChild;
 			if (parent->p->_mutateOnlyDecisions) {
+				Console::WriteLine("before mutating:" + parent->p->Agenda().Name());
 				mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
+				Console::WriteLine("after mutating:" + parent->p->Agenda().Name());
 			}
 			else {
 				mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
@@ -217,7 +221,9 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerTy
             while(rnd() >= _parameters.mutationTerminationProbability)
             {
 				if (parent->p->_mutateOnlyDecisions) {
+					Console::WriteLine("before mutating:" + parent->p->Agenda().Name());
 					mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
+					Console::WriteLine("after mutating:" + parent->p->Agenda().Name());
 				}
 				else {
 					mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
@@ -703,7 +709,9 @@ void TestChamber::InitializePool(const CardDatabase &cards, PlayerType playerTyp
 			else{ newPlayer = NULL; }
 
 			if (newPlayer->p->_mutateOnlyDecisions) {
+				Console::WriteLine("before mutating:"+newPlayer->p->Agenda().Name());
 				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+				Console::WriteLine("after mutating:" + newPlayer->p->Agenda().Name());
 			}
 			else {
 				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);

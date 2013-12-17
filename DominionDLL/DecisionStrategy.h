@@ -120,6 +120,20 @@ public:
 
 	String getStringInfo() const;
 
+
+	String Name() const
+	{
+		String d = "";
+
+		String s = "e" + String(_m.estateBuyThreshold) + "-d" + String(_m.duchyBuyThreshold) + "-p" + String(_m.provinceBuyThreshold) + ":";
+		for (BuyMenuEntry entry : _m.entries)
+		{
+			s += entry.ToString() + "-";
+		}
+		s.PopEnd();
+		return getStringInfo() + "__" + s;
+	}
+
 	void LoadDecisionWeightsFromFile(const String &s);
 	void SaveDecisionWeightsToFile(const String &s) const;
 private:

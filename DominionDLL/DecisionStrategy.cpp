@@ -249,7 +249,7 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 		return new DecisionStrategy(m, dwts);
 	}
 
-	return new DecisionStrategy(m);
+	return new DecisionStrategy(m, _decisionWeights);
 }
 
 
@@ -272,5 +272,5 @@ DecisionStrategy* DecisionStrategy::MutateOnlyDecisions(const CardDatabase &card
 		return new DecisionStrategy(m, dwts);
 	}
 
-	return new DecisionStrategy(m);
+	return new DecisionStrategy(m, _decisionWeights);
 }
