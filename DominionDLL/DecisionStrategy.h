@@ -116,6 +116,7 @@ public:
 	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;
 
 	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	DecisionStrategy* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 	String getStringInfo() const;
 

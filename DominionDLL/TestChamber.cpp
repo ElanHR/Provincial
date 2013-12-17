@@ -183,8 +183,12 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
 			else if (playerType == STATEINFORMED_PLAYER){
 				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions)));
 			}else{	newPlayer = NULL;}
-
-            newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
+			if (newPlayer->p->_mutateOnlyDecisions) {
+				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+			}
+			else {
+				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
+			}
             _leaders.PushEnd(newPlayer);
         }
     }
@@ -201,11 +205,22 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerTy
         while(_pool.Length() < _parameters.poolSize)
         {
             TestPlayer *parent = _leaders.RandomElement();
-            TestPlayer *mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
+			TestPlayer *mutatedChild;
+			if (parent->p->_mutateOnlyDecisions) {
+				mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
+			}
+			else {
+				mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
+			}
 
             while(rnd() >= _parameters.mutationTerminationProbability)
             {
-                mutatedChild = new TestPlayer(mutatedChild->p->Mutate(cards, _gameOptions));
+				if (parent->p->_mutateOnlyDecisions) {
+					mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
+				}
+				else {
+					mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
+				}
             }
 
             _pool.PushEnd(mutatedChild);
@@ -686,7 +701,12 @@ void TestChamber::InitializePool(const CardDatabase &cards, PlayerType playerTyp
 			}
 			else{ newPlayer = NULL; }
 
-            newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
+			if (newPlayer->p->_mutateOnlyDecisions) {
+				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+			}
+			else {
+				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
+			}
             _pool.PushEnd(newPlayer);
             //newPlayer->p = new PlayerHeuristic(new BuyAgendaMenu(menu));
         }

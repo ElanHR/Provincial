@@ -903,3 +903,10 @@ PlayerLearning* PlayerHeuristic::Mutate(const CardDatabase &cards, const GameOpt
     }
     return result;
 }
+
+
+PlayerLearning* PlayerHeuristic::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
+{
+	Console::WriteLine("AHHHHH");
+	return NULL;
+}
