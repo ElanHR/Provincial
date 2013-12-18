@@ -78,35 +78,10 @@ void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
-			/* Consider every card, decide based on features
-			// playing each card in the base game:
-			Cellar_Play,
-			Chapel_Play,
-			Moat_Play,
-			Chancellor_Play,
-			Village_Play,
-			Woodcutter_Play,
-			Workshop_Play,
-			Bureaucrat_Play,
-			Feast_Play,
-			// gardens no action
-			Militia_Play,
-			Moneylender_Play,
-			Remodel_Play,
-			Smithy_Play,
-			Spy_Play,
-			Thief_Play,
-			ThroneRoom_Play,
-			CouncilRoom_Play,
-			Festival_Play,
-			Laboratory_Play,
-			Library_Play,
-			Market_Play,
-			Mine_Play,
-			Witch_Play,
-			Adventurer_Play,*/
-		for (int f = MONEY_DENSITY_OF_DECK; f < NUM_FEATURES; f++) {
-			Feature feature = static_cast<Feature>(f);
+		// only add pertinent features
+		Vector<Feature>* pertinentFeatures = getPertinentFeatures(static_cast<Decisions>(d));
+		for (UINT f = 0; f < pertinentFeatures->Length(); f++) {
+			Feature feature = pertinentFeatures->at(f);
 			FeatureWeight fw(feature, initGauss(gen));
 			_decisionWeights->at(d)->PushEnd(fw);
 		}
@@ -124,6 +99,337 @@ String DecisionStrategy::getStringInfo() const {
 	return result;
 }
 
+Vector<Feature>* DecisionStrategy::getPertinentFeatures(Decisions d) const {
+	Vector<Feature>* v = new Vector<Feature>();
+	switch (d) {
+	case Cellar_Play:
+		// play features
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features - worth it to discard?
+		v->PushEnd(NUM_VICTORY_CARDS_IN_HAND);
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(NUM_COPPER_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features - worth it to draw?
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Chapel_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// hand features - worth it to trash?
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(NUM_CURSE_CARDS_IN_HAND);
+		v->PushEnd(NUM_COPPER_CARDS_IN_HAND);
+		break;
+	case Moat_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features - worth it to play and draw?
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Chancellor_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Village_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Woodcutter_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		break;
+	case Workshop_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// is it worth it to gain a card?
+		// TODO add supply features?
+		break;
+	case Bureaucrat_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// opp features
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO);
+		break;
+	case Feast_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// is it worth it to gain a card?
+		// TODO add supply features?
+		break;
+	case Militia_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// opp features
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO);
+		v->PushEnd(OPP_HAND_SIZE_LARGER_THAN_THREE);
+		break;
+	case Moneylender_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(HAS_ONE_COPPER_IN_HAND);
+		break;
+	case Remodel_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// TODO add supply features?
+		break;
+	case Smithy_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Spy_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// opp features
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Thief_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// opp features
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_TREASURE_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO);
+		break;
+	case ThroneRoom_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		break;
+	case CouncilRoom_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(BUYING_POWER);
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		//TODO consider opponent deck
+		break;
+	case Festival_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(BUYING_POWER);
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		break;
+	case Laboratory_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Library_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Market_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(BUYING_POWER);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Mine_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(NUM_TREASURE_CARDS_IN_HAND);
+		break;
+	case Witch_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		// opp features
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK);
+		v->PushEnd(OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Adventurer_Play:
+		v->PushEnd(DECISION_CONSTANT);
+		// turn features
+		v->PushEnd(NUM_AVAILABLE_ACTIONS);
+		v->PushEnd(NUM_AVAILABLE_BUYS);
+		// some hand features
+		v->PushEnd(NUM_ACTION_CARDS_IN_HAND);
+		v->PushEnd(NUM_TREASURE_CARDS_IN_HAND);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		break;
+	case Play_Nothing:
+		v->PushEnd(DECISION_CONSTANT);
+		break;
+	// card decisioms
+	case Chancellor_DiscardDeck:
+		v->PushEnd(DECISION_CONSTANT);
+		// deck features
+		v->PushEnd(MONEY_DENSITY_OF_DECK);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25);
+		v->PushEnd(MONEY_DENSITY_OF_DECK_GREATER_THAN_1_5);
+		v->PushEnd(ACTION_DENSITY_OF_DECK);
+		v->PushEnd(VICTORY_DENSITY_OF_DECK);
+		break;
+	case Chancellor_DoNothing:
+		v->PushEnd(DECISION_CONSTANT);
+		break;
+	}
+	return v;
+}
+
 double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const{
 
 	double w = 0.0;
@@ -137,44 +443,69 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 		int player = s.decision.controllingPlayer;
 		const PlayerState &p = s.players[player];
 
-
 		double featureValue = 0.0;
 
-
-
 		////////////////////////////////
+		// calculate deck counts
 		int totalMoneyLeft = 0;
-				for (Card *c : p.deck){
-					if (c->isTreasure){
-				totalMoneyLeft += c->money;
-					}
-				}
-
 		int totalActionsLeft = 0;
+		int totalVictoryCardsAndCursesLeft = 0;
 		for (Card *c : p.deck){
+			if (c->isTreasure){
+				totalMoneyLeft += c->money;
+			}
 			if (c->isAction){
 				totalActionsLeft++;
 			}
-		}
-
-		int totalVictoryCardsAndCursesLeft = 0;
-		for (Card *c : p.deck){
 			if (c->IsPureVictory() || c->name == "curse"){
 				totalVictoryCardsAndCursesLeft++;
 			}
 		}
+		// calculate hand counts
+		int numCursesInHand = 0, numCoppersInHand = 0;
+		for (Card *c : p.hand) {
+			if (c->name == "curse") {
+				numCursesInHand++;
+			}
+			else if (c->name == "copper") {
+				numCoppersInHand++;
+			}
+		}
+		// calculate game state counts
+		UINT numEmptyPiles = s.EmptySupplyPiles();
+		// calculate opponents' deck densities
+		int numMoatsOppDeck = 0;
+		int numCardsOppDeck = 0;
+		int numCardsOppHand = 0;
+		int numTreasuresOppDeck = 0;
+		// get other player and get counts
+		//TODO change this if increase number players
+		for (int pIndex = 0; pIndex < s.playerMaximum; pIndex++) {
+			if (pIndex != player) {
+				const PlayerState &curp = s.players[pIndex];
+				for (Card* c : curp.deck) {
+					if (c->name == "moat") {
+						numMoatsOppDeck++;
+					}
+					if (c->isTreasure) {
+						numTreasuresOppDeck++;
+					}
+				}
+				numCardsOppDeck = curp.deck.Length();
+				numCardsOppHand = curp.hand.Length();
+			}
+		}
+
 		////////////////////////////////
-
-
 		switch (f.type){
+			// deck features
 			case MONEY_DENSITY_OF_DECK:
 				// Value of the money density of the remaining deck
 				featureValue = (double)totalMoneyLeft / (double)p.deck.Length();
 				break;
 			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1:
 				// get value of OPPONENT_HAS_ATTACK_CARDS from state s and multiphy in 
-				//TODO: ACTUALLY EXTRACT INFO FROM S
-
+				featureValue = ((double)totalMoneyLeft / (double)p.deck.Length()>1) ? 1.0 : 0;
 				break;
 			case MONEY_DENSITY_OF_DECK_GREATER_THAN_1_25:
 				// Boolean value if money density is greater than 1.25
@@ -184,19 +515,63 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 				// Boolean value if money density is greater than 1.5
 				featureValue = ((double)totalMoneyLeft / (double)p.deck.Length()>1.5) ? 1.0 : 0;
 				break;
-				
 			case ACTION_DENSITY_OF_DECK:
-
 				featureValue = (double)totalActionsLeft / (double)p.deck.Length();
 				break;
 			case VICTORY_DENSITY_OF_DECK:
-				
 				featureValue = (double)totalVictoryCardsAndCursesLeft / (double)p.deck.Length();
 				break;
-
+			// turn features
+			case NUM_AVAILABLE_ACTIONS:
+				featureValue = p.actions;
+				break;
+			// hand features
+			case NUM_CARDS_IN_HAND:
+				featureValue = p.hand.Length();
+				break;
 			case BUYING_POWER:
-
 				featureValue = p.MoneyTotal();
+				break;
+			case NUM_ACTION_CARDS_IN_HAND:
+				featureValue = p.ActionCount();
+				break;
+			case NUM_VICTORY_CARDS_IN_HAND:
+				featureValue = p.VictoryCount();
+				break;
+			case NUM_TREASURE_CARDS_IN_HAND:
+				featureValue = p.TreasureCount();
+				break;
+			case NUM_CURSE_CARDS_IN_HAND:
+				featureValue = numCursesInHand;
+				break;
+			case NUM_COPPER_CARDS_IN_HAND:
+				featureValue = numCoppersInHand;
+				break;
+			case HAS_ONE_COPPER_IN_HAND:
+				featureValue = numCoppersInHand > 0 ? 1 : 0;
+				break;
+			// game ending conditions
+			case ONE_KINGDOM_PILE_EMPTY:
+				if (numEmptyPiles >= 1) featureValue = 1;
+				break;
+			case TWO_KINGDOM_PILES_EMPTY:
+				if (numEmptyPiles >= 2) featureValue = 1;
+				break;
+			case NUM_PROVINCES_LEFT:
+				featureValue = (double) s.SupplyCount(s.data->baseCards.province);
+				break;
+			// opp deck features
+			case OPP_MOAT_DENSITY_OF_OPP_DECK_IS_ZERO:
+				featureValue = ((double)numMoatsOppDeck / (double)numCardsOppDeck) == 0 ? 1 : 0;
+				break;
+			case OPP_MOAT_DENSITY_OF_OPP_DECK:
+				featureValue = (double)numMoatsOppDeck / (double)numCardsOppDeck;
+				break;
+			case OPP_TREASURE_DENSITY_OF_OPP_DECK:
+				featureValue = (double)numTreasuresOppDeck / (double)numCardsOppDeck;
+				break;
+			case OPP_HAND_SIZE_LARGER_THAN_THREE:
+				featureValue = numCardsOppHand > 3 ? 1 : 0;
 				break;
 				//TODO: FILL IN MORE FEATURES HERE
 		}
