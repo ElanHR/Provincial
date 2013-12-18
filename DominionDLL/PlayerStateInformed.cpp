@@ -361,8 +361,8 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "chancellor")
     {
-		if( _strategy->getDecisionWeight(s, response, Chancellor_DiscardDeck) 
-			> _strategy->getDecisionWeight(s, response, Chancellor_DoNothing) ){
+		if( _strategy->getDecisionWeight(s, response, Chancellor_Play) 
+			> _strategy->getDecisionWeight(s, response, Play_Nothing) ){
 			response.choice = 0; // discard deck
 		}
 		else{
