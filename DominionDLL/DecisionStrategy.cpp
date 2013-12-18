@@ -78,6 +78,33 @@ void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
+			/* Consider every card, decide based on features
+			// playing each card in the base game:
+			Cellar_Play,
+			Chapel_Play,
+			Moat_Play,
+			Chancellor_Play,
+			Village_Play,
+			Woodcutter_Play,
+			Workshop_Play,
+			Bureaucrat_Play,
+			Feast_Play,
+			// gardens no action
+			Militia_Play,
+			Moneylender_Play,
+			Remodel_Play,
+			Smithy_Play,
+			Spy_Play,
+			Thief_Play,
+			ThroneRoom_Play,
+			CouncilRoom_Play,
+			Festival_Play,
+			Laboratory_Play,
+			Library_Play,
+			Market_Play,
+			Mine_Play,
+			Witch_Play,
+			Adventurer_Play,*/
 		for (int f = MONEY_DENSITY_OF_DECK; f < NUM_FEATURES; f++) {
 			Feature feature = static_cast<Feature>(f);
 			FeatureWeight fw(feature, initGauss(gen));
