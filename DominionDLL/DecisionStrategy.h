@@ -9,8 +9,34 @@ static std::mt19937 gen(rd());
 static std::normal_distribution<> initGauss(0, initVariance);
 
 typedef enum Decisions{
-	Chancellor_DiscardDeck,
-	Chancellor_DoNothing,
+	// playing each card in the base game:
+	Cellar_Play,
+	Chapel_Play,
+	Moat_Play,
+	Chancellor_Play,
+	Village_Play,
+	Woodcutter_Play,
+	Workshop_Play,
+	Bureaucrat_Play,
+	Feast_Play,
+	// gardens no action
+	Militia_Play,
+	Moneylender_Play,
+	Remodel_Play,
+	Smithy_Play,
+	Spy_Play,
+	Thief_Play,
+	ThroneRoom_Play,
+	CouncilRoom_Play,
+	Festival_Play,
+	Laboratory_Play,
+	Library_Play,
+	Market_Play,
+	Mine_Play,
+	Witch_Play,
+	Adventurer_Play,
+
+	Play_Nothing,
 
 
 	//// higher level, broad decision

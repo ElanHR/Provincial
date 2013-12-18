@@ -182,6 +182,37 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
     {
         auto scoringFunction = [this,&p,&s](Card *c) 
         {
+			/* Consider every card, decide based on features
+			// playing each card in the base game:
+			Cellar_Play,
+			Chapel_Play,
+			Moat_Play,
+			Chancellor_Play,
+			Village_Play,
+			Woodcutter_Play,
+			Workshop_Play,
+			Bureaucrat_Play,
+			Feast_Play,
+			// gardens no action
+			Militia_Play,
+			Moneylender_Play,
+			Remodel_Play,
+			Smithy_Play,
+			Spy_Play,
+			Thief_Play,
+			ThroneRoom_Play,
+			CouncilRoom_Play,
+			Festival_Play,
+			Laboratory_Play,
+			Library_Play,
+			Market_Play,
+			Mine_Play,
+			Witch_Play,
+			Adventurer_Play,*/
+
+
+
+
             int score = c->priority + 2;
             if(c->name == "moneylender" && !p.hand.Contains(s.data->baseCards.copper)) score = -1;
             if(c->name == "treasure map" && p.hand.Count(s.data->baseCards.treasureMap) == 1) score = -1;
