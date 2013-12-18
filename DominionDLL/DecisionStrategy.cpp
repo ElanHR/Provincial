@@ -584,6 +584,11 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 }
 
 DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const GameOptions &options) const{
+	DecisionStrategy* buysChanged = MutateOnlyBuys(cards, options);
+	return buysChanged->MutateOnlyDecisions(cards,options);
+}
+
+DecisionStrategy* DecisionStrategy::MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const{
 	PersistentAssert(_m.entries.Length() > 0, "Empty menu");
 	BuyMenu m = _m;
 
@@ -639,21 +644,6 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 		BuyMenuEntry &entry1 = m.entries.RandomElement();
 		BuyMenuEntry &entry2 = m.entries.RandomElement();
 		if (entry1.minCost == entry2.minCost && entry1.maxCost == entry2.maxCost && entry1.count != 99 && entry2.count != 99) Utility::Swap(entry1, entry2);
-	}
-
-	// mutate the decision strategy
-	if (rnd() <= 0.9) {
-		Vector<Vector<FeatureWeight>*>* dwts = new Vector<Vector<FeatureWeight>*>();
-		for (Vector<FeatureWeight>* v : *_decisionWeights) {
-			Vector<FeatureWeight>* vf = new Vector<FeatureWeight>();
-			for (FeatureWeight f : *v) {
-				normal_distribution<> gauss(f.weight, mutateVariance);
-				FeatureWeight fw(f.type, gauss(gen));
-				vf->PushEnd(fw);
-			}
-			dwts->PushEnd(vf);
-		}
-		return new DecisionStrategy(m, dwts);
 	}
 
 	return new DecisionStrategy(m, _decisionWeights);

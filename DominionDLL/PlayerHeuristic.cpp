@@ -896,17 +896,21 @@ void PlayerHeuristic::MakeCustomDecision(const State &s, DecisionResponse &respo
 
 PlayerLearning* PlayerHeuristic::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
-    PlayerHeuristic *result = new PlayerHeuristic(_buyAgenda->Mutate(cards, options));
-    if(rnd() <= 0.2)
-    {
-        result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
-    }
-    return result;
+	return MutateOnlyBuys(cards,options);
 }
 
+PlayerLearning* PlayerHeuristic::MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const
+{
+	PlayerHeuristic *result = new PlayerHeuristic(_buyAgenda->Mutate(cards, options));
+	if (rnd() <= 0.2)
+	{
+		result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
+	}
+	return result;
+}
 
 PlayerLearning* PlayerHeuristic::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
 {
 	Console::WriteLine("AHHHHH");
-	return NULL;
+	return new PlayerHeuristic(_buyAgenda);
 }

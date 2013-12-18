@@ -49,8 +49,10 @@ public:
 	virtual String ControllerName() = 0;
 	virtual const BuyAgenda& Agenda() const = 0;
 	virtual PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const = 0;
+	virtual PlayerLearning* MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const =  0;
 	virtual PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const = 0;
-	const static boolean _mutateOnlyDecisions = true;
+	
+	const static boolean _mutateOnlyDecisions = false;
 };
 
 class PlayerHeuristic : public PlayerLearning
@@ -67,6 +69,7 @@ public:
     }
 
 	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const;
 	PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 private:
@@ -111,6 +114,7 @@ public:
     }
 
 	PlayerLearning* Mutate(const CardDatabase &cards, const GameOptions &options) const;
+	PlayerLearning* MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const;
 	PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 protected:

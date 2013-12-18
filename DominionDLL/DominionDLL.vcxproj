@@ -47,6 +47,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="BaseCodeDLL.h" />
     <ClInclude Include="TestChamber.h" />
+    <ClInclude Include="TestChamberBuys.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIUtility.cpp" />

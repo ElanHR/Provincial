@@ -37,19 +37,36 @@ int main(int argc, char *argv[])
     String directory;
     int generationCount = 64;
     int chamberCount = 3;
+	String buyMenu = "";
 
     BYTE bytes[16];
     for(UINT byteIndex = 0; byteIndex < 16; byteIndex++) bytes[byteIndex] = rand() % 255;
 
     String kingdomPileHash = String::ByteStreamToHexString(bytes, 16);
 
+	String trainingType = "";
+
     if(useTournamentFile)
     {
-        Vector<String> lines = Utility::GetFileLines("TournamentParameters.txt");
-        if(lines[0] != "random") app->ProcessCommand("newKingdomCards@" + lines[0]);
 
-        if(lines[1] == "random")
-        {
+		
+        Vector<String> lines = Utility::GetFileLines("TournamentParameters.txt");
+        
+		
+
+		if (lines[0].Contains("trainingType")){
+			if (lines[0].Contains("Train_BuyOrder")){
+				trainingType = "Train_BuyOrder";
+			}else if (lines[0].Contains("Train_Decisions")){
+				trainingType = "Train_Decisions";
+			}
+		}else{
+			Console::WriteLine("ERROR! No training type given");
+		}
+
+		if(lines[1] != "random") app->ProcessCommand("newKingdomCards@" + lines[1]);
+
+        if(lines[2] == "random"){
             Utility::MakeDirectory("kingdomsIntermediate");
 
             directory = "kingdomsIntermediate/auto_" + kingdomPileHash + "/";
@@ -60,13 +77,13 @@ int main(int argc, char *argv[])
             Utility::MakeDirectory(directory + "leaderboard/");
             Utility::MakeDirectory(directory + "progression/");
         }
-        else
-        {
-            directory = lines[1];
+        else{
+            directory = lines[2];
         }
 
-        generationCount = lines[2].RemovePrefix("generations=").ConvertToInteger();
-        chamberCount = lines[3].RemovePrefix("chambers=").ConvertToInteger();
+        generationCount = lines[3].RemovePrefix("generations=").ConvertToInteger();
+        chamberCount = lines[4].RemovePrefix("chambers=").ConvertToInteger();
+		buyMenu = lines[5].RemovePrefix("buyMenu=");
     }
     else
     {
@@ -79,7 +96,9 @@ int main(int argc, char *argv[])
         Utility::MakeDirectory(directory + "progression/");
     }
 
-    app->ProcessCommand("trainAIStart@" + directory + "@" + String(chamberCount));
+
+
+	app->ProcessCommand("trainAIStart@" + directory + "@" + String(chamberCount) + "@" + trainingType + "@" + buyMenu);
 
     for (int generationIndex = 0; generationIndex < generationCount; generationIndex++)
     {

@@ -65,8 +65,8 @@ class TestChamber
 {
 public:
     void FreeMemory();
-	void StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType);
-	void StrategizeStep(const CardDatabase &cards, PlayerType playerType);
+	void StrategizeStartBuys(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType, String buyMenu);
+	void StrategizeStepBuys(const CardDatabase &cards, PlayerType playerType);
 
     TestResult Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested, bool useConsole=true);
 
@@ -75,7 +75,9 @@ private:
     void ComputeCounters(const CardDatabase &cards, const String &filename);
     void ComputeProgression(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
     void ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
-	void InitializePool(const CardDatabase &cards, PlayerType playerType);
+	void InitializeBuyPool(const CardDatabase &cards, PlayerType playerType);
+	void InitializeDecisionPool(const CardDatabase &cards, String buyMenu);
+
     Grid<TestResult> TestPool(const CardDatabase &cards, const String &filename);
 
     void AssignBuyIDs(const Grid<TestResult> &poolResults);
@@ -112,3 +114,4 @@ struct TestChamberTask : public WorkerThreadTask
     TestParameters params;
     TestResult *result;
 };
+
