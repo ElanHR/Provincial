@@ -12,9 +12,20 @@ void App::Init()
 
 UINT32 App::ProcessCommand(const String &command)
 {
+	//Console::WriteLine("==== Command ====");
+	//Console::WriteLine(command);
+
     Vector<String> parameters = command.Partition("@");
+
+	Console::WriteLine("==== parameters["+ String(parameters.Length()) +"]====");
+	for (String param : parameters){
+		Console::WriteLine(param);
+	}
+	Console::WriteLine("==========");
+
     if(parameters[0] == "newKingdomCards")
     {
+		
         _options = GameOptions();
         if(parameters.Length() == 1)
         {
@@ -142,7 +153,17 @@ UINT32 App::ProcessCommand(const String &command)
         GameOptions options;
         if(_game.data().options.supplyPiles.Length() == 0) options.RandomizeSupplyPiles(_cards);
         else options = _game.data().options;
-        _chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(),STATEINFORMED_PLAYER);
+
+			
+		if (parameters[3] == "Train_BuyOrder"){
+			Console::WriteLine("Train_BuyOrder");
+			_chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(), HEURISTIC_PLAYER,"");
+		}
+		else if (parameters[3] == "Train_Decisions"){
+			Console::WriteLine("Train_Decisions");
+			_chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(), STATEINFORMED_PLAYER,parameters[4]);
+		}
+
     }
     else if(parameters[0] == "trainAIStep")
     {

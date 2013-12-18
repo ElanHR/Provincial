@@ -1,6 +1,6 @@
 #include "Main.h"
 
-void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, PlayerType playerType)
+void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, PlayerType playerType, String buyMenu)
 {
     Console::WriteLine("BLAAAH!!! Strategizing for kingdom piles:");
     Console::WriteLine(options.ToString());
@@ -18,7 +18,7 @@ void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptio
         chamberSuffix[0] += chamberIndex;
         if(_chambers.Length() == 1) chamberSuffix = "";
         else chamberSuffix = "_" + chamberSuffix;
-		_chambers[chamberIndex].StrategizeStart(cards, options, directory, chamberSuffix, playerType);
+		_chambers[chamberIndex].StrategizeStartBuys(cards, options, directory, chamberSuffix, playerType, buyMenu);
     }
 }
 
@@ -26,7 +26,7 @@ void MetaTestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playe
 {
     for(UINT chamberIndex = 0; chamberIndex < _chambers.Length(); chamberIndex++)
     {
-		_chambers[chamberIndex].StrategizeStep(cards, playerType);
+		_chambers[chamberIndex].StrategizeStepBuys(cards, playerType);
     }
 
     TestChamber &chamber = _chambers[0];

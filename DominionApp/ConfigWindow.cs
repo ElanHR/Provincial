@@ -18,6 +18,13 @@ namespace BaseCodeApp
         public string activeTournamentDirectory = "";
         public int activeTournamentGenerationCount = -1;
 
+        String trainingType = "";
+        String topLeader = "";
+        
+
+
+
+
         public ConfigWindow(MainWindow _parentWindow)
         {
             InitializeComponent();
@@ -361,6 +368,17 @@ namespace BaseCodeApp
 
         private void buttonRunTournament_Click(object sender, EventArgs e)
         {
+            ////
+            String player1String = "Human";
+            if (comboPlayer1.SelectedItem.ToString() != "Human")
+            {
+                player1String = "e" + textBoxPlayer1Estate.Text.ToString() + "-" +
+                                "d" + textBoxPlayer1Duchy.Text.ToString() + "-" +
+                                "p" + textBoxPlayer1Province.Text.ToString() + "-" +
+                                PanelToShorthandEncoding(panelPlayer1).Replace("@", "~");
+            }
+            ////
+
             parentWindow.VisualizeFinal();
             if (parentWindow.activeProcess != null)
             {
@@ -377,7 +395,7 @@ namespace BaseCodeApp
             }
 
             int chamberCount, generationCount;
-            String playerType; 
+
             try
             {
                 chamberCount = Convert.ToInt32(textBoxChambers.Text.ToString());
@@ -405,7 +423,7 @@ namespace BaseCodeApp
             if (result == DialogResult.Yes)
             {
                 activeTournamentGenerationCount = generationCount;
-                activeTournamentDirectory = Directory.GetCurrentDirectory() + "/" + parentWindow.Strategize(generationCount, chamberCount,"");
+                activeTournamentDirectory = Directory.GetCurrentDirectory() + "/" + parentWindow.Strategize(generationCount, chamberCount, trainingType, player1String);
                 timerCheckProgress.Enabled = true;
                 buttonLoadAndVisualize.Enabled = false;
             }
@@ -456,6 +474,7 @@ namespace BaseCodeApp
             }
 
             ResetPlayerLists();
+            topLeader = lines[leaderStartIndex + 0 + 1].Split('\t')[2];
             for (int leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
             {
                 String shorthand = lines[leaderStartIndex + leaderIndex + 1].Split('\t')[2];
@@ -467,6 +486,8 @@ namespace BaseCodeApp
             {
                 comboPlayer1.SelectedIndex = 2;
                 comboPlayer2.SelectedIndex = 0;
+
+                trainingTypeBox.SelectedIndex = 0;
             }
             catch { }
 
@@ -612,7 +633,12 @@ namespace BaseCodeApp
             Process.Start("http://graphics.stanford.edu/~mdfisher/DominionAI.html");
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void trainingType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trainingType = trainingTypeBox.SelectedItem.ToString();
+        }
+
+        private void textBoxRequiredCards_TextChanged(object sender, EventArgs e)
         {
 
         }

@@ -487,7 +487,7 @@ namespace BaseCodeApp
 
         }
 
-        public string Strategize(int generationCount, int chamberCount,String playerType)
+        public string Strategize(int generationCount, int chamberCount,String trainingType, String buyMenu)
         {
             if (supply == null || supply.Count == 0) return "";
 
@@ -499,14 +499,20 @@ namespace BaseCodeApp
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/generations");
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/leaderboard");
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/progression");
+            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decisions");
+            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decisions/leaders");
+
 
             using (StreamWriter parameterFile = new System.IO.StreamWriter("TournamentParameters.txt"))
             {
+                parameterFile.WriteLine("trainingType=" + trainingType);
                 parameterFile.WriteLine(DLLInterface.GetString("kingdomDescription").Replace("@","|"));
                 parameterFile.WriteLine("kingdomsIntermediate/" + directory + "/");
                 parameterFile.WriteLine("generations=" + generationCount.ToString());
                 parameterFile.WriteLine("chambers=" + chamberCount.ToString());
-                parameterFile.WriteLine("playerType=" + playerType);
+                parameterFile.WriteLine("buyMenu=" + buyMenu);
+
+                
 
                 parameterFile.Close();
             }

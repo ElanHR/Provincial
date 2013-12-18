@@ -75,9 +75,10 @@
             this.label17 = new System.Windows.Forms.Label();
             this.textBoxChambers = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelLeaderboard = new System.Windows.Forms.Label();
+            this.trainingTypeBox = new System.Windows.Forms.ComboBox();
             this.buttonShowLeaderboard = new System.Windows.Forms.Button();
             this.buttonLoadAndVisualize = new System.Windows.Forms.Button();
+            this.labelLeaderboard = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -103,7 +104,6 @@
             this.timerCheckProgress = new System.Windows.Forms.Timer(this.components);
             this.label33 = new System.Windows.Forms.Label();
             this.labelLink = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -118,6 +118,7 @@
             this.textBoxRequiredCards.Name = "textBoxRequiredCards";
             this.textBoxRequiredCards.Size = new System.Drawing.Size(562, 27);
             this.textBoxRequiredCards.TabIndex = 14;
+            this.textBoxRequiredCards.TextChanged += new System.EventHandler(this.textBoxRequiredCards_TextChanged);
             // 
             // label1
             // 
@@ -555,7 +556,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.trainingTypeBox);
             this.groupBox1.Controls.Add(this.buttonVisualizeAll);
             this.groupBox1.Controls.Add(this.buttonRunTournament);
             this.groupBox1.Controls.Add(this.buttonShowLeaderboard);
@@ -572,16 +573,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tournament";
             // 
-            // labelLeaderboard
+            // trainingTypeBox
             // 
-            this.labelLeaderboard.AutoSize = true;
-            this.labelLeaderboard.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeaderboard.ForeColor = System.Drawing.Color.Blue;
-            this.labelLeaderboard.Location = new System.Drawing.Point(1028, 656);
-            this.labelLeaderboard.Name = "labelLeaderboard";
-            this.labelLeaderboard.Size = new System.Drawing.Size(186, 19);
-            this.labelLeaderboard.TabIndex = 20;
-            this.labelLeaderboard.Text = "No tournament in progress.";
+            this.trainingTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.trainingTypeBox.FormattingEnabled = true;
+            this.trainingTypeBox.Items.AddRange(new object[] {
+            "Train_BuyOrder",
+            "Train_Decisions"});
+            this.trainingTypeBox.Location = new System.Drawing.Point(10, 117);
+            this.trainingTypeBox.Name = "trainingTypeBox";
+            this.trainingTypeBox.Size = new System.Drawing.Size(288, 27);
+            this.trainingTypeBox.TabIndex = 30;
+            this.trainingTypeBox.SelectedIndexChanged += new System.EventHandler(this.trainingType_SelectedIndexChanged);
             // 
             // buttonShowLeaderboard
             // 
@@ -605,6 +608,17 @@
             this.buttonLoadAndVisualize.Text = "Load and Visualize";
             this.buttonLoadAndVisualize.UseVisualStyleBackColor = true;
             this.buttonLoadAndVisualize.Click += new System.EventHandler(this.buttonLoadAndVisualize_Click);
+            // 
+            // labelLeaderboard
+            // 
+            this.labelLeaderboard.AutoSize = true;
+            this.labelLeaderboard.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLeaderboard.ForeColor = System.Drawing.Color.Blue;
+            this.labelLeaderboard.Location = new System.Drawing.Point(1028, 656);
+            this.labelLeaderboard.Name = "labelLeaderboard";
+            this.labelLeaderboard.Size = new System.Drawing.Size(186, 19);
+            this.labelLeaderboard.TabIndex = 20;
+            this.labelLeaderboard.Text = "No tournament in progress.";
             // 
             // groupBox2
             // 
@@ -854,16 +868,6 @@
             this.labelLink.Text = "graphics.stanford.edu/~mdfisher/DominionAI.html";
             this.labelLink.Click += new System.EventHandler(this.labelLink_Click);
             // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(10, 117);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(288, 27);
-            this.comboBox1.TabIndex = 30;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
             // ConfigWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
@@ -1016,6 +1020,6 @@
         private System.Windows.Forms.Timer timerCheckProgress;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label labelLink;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox trainingTypeBox;
     }
 }

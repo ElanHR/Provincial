@@ -7,7 +7,7 @@
 PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
 {
 
-	Console::WriteLine("PlayerStateInformed generation " );
+	//Console::WriteLine("PlayerStateInformed generation " );
 
     //_buyAgenda = agenda;
 	_strategy = strategy;
@@ -932,12 +932,18 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
 /// Creates a new Player by mutuating the buy agenda (and our decision weights agenda)
 PlayerLearning* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
-	PlayerStateInformed *result = new PlayerStateInformed(_strategy->Mutate(cards, options));
-    if(rnd() <= 0.2)
-    {
-        result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
-    }
-    return result;
+	PlayerLearning* buysChanged = MutateOnlyBuys(cards, options);
+	return buysChanged->MutateOnlyDecisions(cards, options);
+}
+
+PlayerLearning* PlayerStateInformed::MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const{
+	PlayerStateInformed *result = new PlayerStateInformed(_strategy->MutateOnlyBuys(cards, options));
+
+	if (rnd() <= 0.2)
+	{
+		result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
+	}
+	return result;
 }
 
 PlayerLearning* PlayerStateInformed::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
