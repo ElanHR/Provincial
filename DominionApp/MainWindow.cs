@@ -95,7 +95,7 @@ namespace BaseCodeApp
         {
             if (checkBoxUsePrecomputedKingdoms.Checked)
             {
-                List<string> files = new List<string>(Directory.EnumerateFiles("kingdomsIntermediate/ad5b49896bf276772ce87717e3f7b3ce/progression/", "*.txt"));
+                List<string> files = new List<string>(Directory.EnumerateFiles("data/kingdoms_g32_c1"));
                 Random r = new Random();
                 InitConfigWindow();
                 configWindow.LoadAIFile(Directory.GetCurrentDirectory() + "/" + files[r.Next(files.Count)]);
