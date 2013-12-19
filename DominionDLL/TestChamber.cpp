@@ -6,6 +6,7 @@ const bool fastTestMode = false;
 
 String TestPlayer::VisualizationDescription(const Vector<Card*> &supplyCards, bool ignoreBuyID, bool ignoreCounts) const
 {
+
     const BuyAgendaMenu *menu = dynamic_cast<const BuyAgendaMenu*>(&p->Agenda());
     BuyMenu m = menu->GetMenu();
     m.Cleanup();

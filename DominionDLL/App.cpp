@@ -204,7 +204,7 @@ UINT32 App::ProcessCommand(const String &command)
 		}
 		else if (parameters[1] == "Train_Decisions"){
 			Console::WriteLine("Train_Decisions");
-			_chamber.StrategizeStart(_cards, options, parameters[2], parameters[3].ConvertToInteger(), TRAINING_DECISIONS,STATEINFORMED_PLAYER,parameters[4]);
+			_chamber.StrategizeStart(_cards, options, parameters[2], parameters[3].ConvertToInteger(), TRAINING_DECISIONS, STATEINFORMED_PLAYER, parameters[4].FindAndReplace("~", "@"));
 		}
 
     }

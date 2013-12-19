@@ -98,8 +98,12 @@ BuyAgendaMenu::BuyAgendaMenu(const CardDatabase &cards, const String &s)
     Vector<String> c = p[3].Partition("|");
     for(String &part : c)
     {
-        Card *card = cards.GetCard(part.Partition("@")[0]);
-        if(card == NULL) card = cards.GetCard("colony");
+		String cardImLookingFor = part.Partition("@")[0];
+		Card *card = cards.GetCard(cardImLookingFor);
+		if (card == NULL){
+			card = cards.GetCard("colony");
+			Console::WriteLine("Couldnt find: " + cardImLookingFor);
+		}
 
         _m.entries.PushEnd(BuyMenuEntry(card, part.Partition("@")[1].ConvertToInteger(), 0, 11));
     }
