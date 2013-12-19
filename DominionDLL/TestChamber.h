@@ -62,6 +62,7 @@ struct TestPlayer
         rating = _rating;
     }
     String VisualizationDescription(const Vector<Card*> &supplyCards, bool ignoreBuyID, bool ignoreCounts = false) const;
+	String VisualizationDescriptionDecisionStrategy() const;
 	PlayerLearning *p;
     double rating;
     String buyID;

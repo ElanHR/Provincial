@@ -38,6 +38,13 @@ String TestPlayer::VisualizationDescription(const Vector<Card*> &supplyCards, bo
     return result;
 }
 
+String TestPlayer::VisualizationDescriptionDecisionStrategy() const
+{
+	const DecisionStrategy *strat = dynamic_cast<const DecisionStrategy*>(&p->Agenda());
+	//strat->SaveDecisionWeightsToFile("decision_" + result);
+	return strat->getStringInfo();
+}
+
 void TestChamberTask::Run(ThreadLocalStorage *threadLocalStorage)
 {
     //
