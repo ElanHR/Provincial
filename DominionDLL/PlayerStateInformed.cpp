@@ -963,7 +963,7 @@ PlayerLearning* PlayerStateInformed::MutateOnlyBuys(const CardDatabase &cards, c
 
 PlayerLearning* PlayerStateInformed::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
 {
-	Console::WriteLine("mutating decisions!");
+	//Console::WriteLine("mutating decisions!");
 	PlayerStateInformed *result = new PlayerStateInformed(_strategy->MutateOnlyDecisions(cards, options));
 	return result;
 }
