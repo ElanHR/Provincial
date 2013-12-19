@@ -460,7 +460,7 @@ void TestChamber::ComputeProgressionDecisions(const CardDatabase &cards, TestPla
 	Console::WriteLine("Generating decisions progression comparison for generation " + String(_generation) + _metaSuffix);
 
 	ofstream file(filename.CString());
-	file << "Decisions Progression" << endl;
+	file << "Progression Decisions" << endl;
 
 	Vector<TestPlayer*> leaderList(1, leader);
 	Grid<TestResult> results = RunAllPairsTests(cards, players, leaderList, _parameters.visualizationGameCount, _parameters.visualizationGameCount);
@@ -589,7 +589,7 @@ void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const V
 	ofstream file(filename.CString());
 	Grid<TestResult> results = RunAllPairsTests(cards, players, players, gameCount, gameCount);
 
-	file << "Leaderboard" << endl;
+	file << "Leaderboard Decisions" << endl;
 	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
 
 	const UINT supplyCount = _supplyCards.Length();
@@ -634,7 +634,7 @@ void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const V
 		for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++) if (leaderIndexA != leaderIndexB) averageWinRatio += results(leaderIndexA, leaderIndexB).winRatio[0];
 		if (leaderCount > 1) averageWinRatio /= double(leaderCount - 1);
 
-		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << endl << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
+		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << "\t" << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	//file << endl << "Full description" << endl;
@@ -716,7 +716,7 @@ Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const 
 	}
 
 	ofstream file(filename.CString());
-	file << "Generation" << endl;
+	file << "Generation Decisions" << endl;
 	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
 
 	file << endl << "Leaders:\t" << leaderCount << endl;
@@ -1156,7 +1156,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 
 	GenerateNewPool(cards, playerType);
 
-	SaveVisualizationFiles(cards);
+	SaveVisualizationFilesDecisions(cards);
 
 	_generation++;
 }
