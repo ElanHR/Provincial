@@ -625,7 +625,7 @@ void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const V
 		for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++) if (leaderIndexA != leaderIndexB) averageWinRatio += results(leaderIndexA, leaderIndexB).winRatio[0];
 		if (leaderCount > 1) averageWinRatio /= double(leaderCount - 1);
 
-		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << endl << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
+		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << "\t" << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	//file << endl << "Full description" << endl;
