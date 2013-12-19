@@ -1,5 +1,6 @@
 //Build a vector of features
 #include <random>
+#include <regex>
 #include "Main.h"
 
 static double mutateVariance = 3, initVariance = 20;
