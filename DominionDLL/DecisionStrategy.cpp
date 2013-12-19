@@ -104,6 +104,7 @@ String DecisionStrategy::getStringInfo() const {
 
 Decisions DecisionStrategy::getActionPlayDecision(Card* c) const {
 	String name = c->name;
+	Console::WriteLine("get play decision for card:" + name);
 	if (name == "cellar") {
 		return Cellar_Play;
 	}
