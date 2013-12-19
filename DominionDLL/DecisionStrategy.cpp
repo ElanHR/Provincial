@@ -674,6 +674,8 @@ DecisionStrategy* DecisionStrategy::Mutate(const CardDatabase &cards, const Game
 }
 
 DecisionStrategy* DecisionStrategy::MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const{
+	Console::WriteLine("MUTATING BUYS IN DS");
+	
 	PersistentAssert(_m.entries.Length() > 0, "Empty menu");
 	BuyMenu m = _m;
 
