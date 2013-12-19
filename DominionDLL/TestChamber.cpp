@@ -117,7 +117,7 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
         for(UINT poolIndex = 0; poolIndex < _pool.Length() && !newLeaderFound; poolIndex++)
         {
             TestPlayer *curPlayer = _pool[poolIndex];
-			if (_trainingType == TRAINING_DECISIONS ||  !leaderBuyIDs.Contains(curPlayer->buyID) && !leaderMenuIDs.Contains(curPlayer->VisualizationDescription(_supplyCards, true, true)))
+			if (( _trainingType == TRAINING_DECISIONS && !_leaders.Contains(curPlayer)) || !leaderBuyIDs.Contains(curPlayer->buyID) && !leaderMenuIDs.Contains(curPlayer->VisualizationDescription(_supplyCards, true, true)))
             {
                 bool overusedCardFound = false;
                 for(UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++)
