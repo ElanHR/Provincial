@@ -6,7 +6,11 @@ DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) :
 	//LoadDecisionWeightsFromFile(s);
 }
 
+DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s, const String &decString) : BuyAgendaMenu(cards, s){
+	Init(decString);
 
+	//LoadDecisionWeightsFromFile(s);
+}
 
 // copying the other one, should copy 
 DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
@@ -84,6 +88,22 @@ DecisionStrategy::~DecisionStrategy(){
 
 void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
+	for (int d = 0; d < NUM_DECISIONS; d++){
+		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
+		// only add pertinent features
+		Vector<Feature>* pertinentFeatures = getPertinentFeatures(static_cast<Decisions>(d));
+		for (UINT f = 0; f < pertinentFeatures->Length(); f++) {
+			Feature feature = pertinentFeatures->at(f);
+			FeatureWeight fw(feature, initGauss(gen));
+			_decisionWeights->at(d)->PushEnd(fw);
+		}
+	}
+}
+
+void DecisionStrategy::Init(const String &decisions){
+	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
+	// TODO parse the decisions string
+
 	for (int d = 0; d < NUM_DECISIONS; d++){
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
 		// only add pertinent features
