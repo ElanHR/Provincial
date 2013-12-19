@@ -90,10 +90,13 @@ void DecisionStrategy::Init(){
 
 String DecisionStrategy::getStringInfo() const {
 	String result = "";
+	int d = 0;
 	for (Vector<FeatureWeight>* v : *_decisionWeights) {
+		result += "d:" + d;
 		for (FeatureWeight f : *v) {
-			result += ("f:" + f.type) + (" wt:" + String(f.weight)); 
+			result += (" f:" + f.type) + (" wt:" + String(f.weight)); 
 		}
+		d++;
 	}
 	result += "\n";
 	return result;
