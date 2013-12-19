@@ -86,6 +86,7 @@ private:
     void ComputeProgression(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
     void ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
 
+	void ComputeProgressionDecisions(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
 	void ComputeLeaderboardDecisions(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
 	
 	void InitializeBuyPool(const CardDatabase &cards, PlayerType playerType);
@@ -100,6 +101,8 @@ private:
 	void AssignNewLeaders(const CardDatabase &cards, PlayerType playerType);
 	void GenerateNewPool(const CardDatabase &cards, PlayerType playerType);
     void SaveVisualizationFiles(const CardDatabase &cards);
+
+	void SaveVisualizationFilesDecisions(const CardDatabase &cards);
 
     Grid<TestResult> RunAllPairsTests(const CardDatabase &cards, const Vector<TestPlayer*> &playersA, const Vector<TestPlayer*> &playersB, UINT minGameCount, UINT maxGameCount);
 
