@@ -946,6 +946,7 @@ void PlayerStateInformed::MakeCustomDecision(const State &s, DecisionResponse &r
 /// Creates a new Player by mutuating the buy agenda (and our decision weights agenda)
 PlayerLearning* PlayerStateInformed::Mutate(const CardDatabase &cards, const GameOptions &options) const
 {
+	Console::WriteLine("mutating both!");
 	PlayerLearning* buysChanged = MutateOnlyBuys(cards, options);
 	return buysChanged->MutateOnlyDecisions(cards, options);
 }
@@ -962,6 +963,7 @@ PlayerLearning* PlayerStateInformed::MutateOnlyBuys(const CardDatabase &cards, c
 
 PlayerLearning* PlayerStateInformed::MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const
 {
+	Console::WriteLine("mutating decisions!");
 	PlayerStateInformed *result = new PlayerStateInformed(_strategy->MutateOnlyDecisions(cards, options));
 	return result;
 }
