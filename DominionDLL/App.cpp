@@ -65,13 +65,35 @@ UINT32 App::ProcessCommand(const String &command)
             if(parameters[1] == "Human") playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHuman));
 			else {
 				// TODO if there's decision info?
-				playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
+				Vector<String> parts = parameters[1].Partition("\t");
+				if (parts.Length() == 2) {
+					playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
+				}
+				else if (parts.Length() == 1) {
+					playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
+				}
+				else {
+					Console::WriteLine("AAHH BAD SPLIT BY TABS");
+					SignalError("AAHH BAD SPLIT BY TABS");
+					return 1;
+				}
 			}
 
             if(parameters[2] == "Human") playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHuman));
 			else {
 				// TODO if there's decision info?
-				playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+				Vector<String> parts = parameters[2].Partition("\t");
+				if (parts.Length() == 2) {
+					playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
+				}
+				else if (parts.Length() == 1) {
+					playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+				}
+				else {
+					Console::WriteLine("AAHH BAD SPLIT BY TABS");
+					SignalError("AAHH BAD SPLIT BY TABS");
+					return 1;
+				}
 			}
         }
 
@@ -87,7 +109,20 @@ UINT32 App::ProcessCommand(const String &command)
 		// TODO if there's decision info?
 
         playerList.PushEnd(PlayerInfo(0, "Heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~","@")))));
-        playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parameters[2].FindAndReplace("~","@")))));
+
+		// TODO if there's decision info?
+		Vector<String> parts = parameters[2].Partition("\t");
+		if (parts.Length() == 2) {
+			playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
+		}
+		else if (parts.Length() == 1) {
+			playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+		}
+		else {
+			Console::WriteLine("AAHH BAD SPLIT BY TABS");
+			SignalError("AAHH BAD SPLIT BY TABS");
+			return 1;
+		}
 
         logging = true;
         decisionText = true;

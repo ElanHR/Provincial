@@ -2,8 +2,6 @@
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) : BuyAgendaMenu(cards, s){
 	Init();
-
-	//LoadDecisionWeightsFromFile(s);
 }
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s, const String &decString) : BuyAgendaMenu(cards, s){
