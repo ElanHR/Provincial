@@ -119,6 +119,8 @@ private:
     GameOptions _gameOptions;
     Vector<Card*> _supplyCards;
 
+	TrainingType _trainingType;
+	PlayerType _playerType;
     String _metaSuffix;
     int _generation;
     String _directory;

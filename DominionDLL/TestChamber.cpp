@@ -150,10 +150,13 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
 				newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, _gameOptions)));
 			}else{	newPlayer = NULL;}
 			
-			if (newPlayer->p->_mutateOnlyDecisions) {
+			if (_trainingType==TRAINING_DECISIONS) {
 				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
 			}
-			else {
+			else if (_trainingType == TRAINING_BUYS){
+				newPlayer->p = newPlayer->p->MutateOnlyBuys(cards, _gameOptions);
+			}
+			else{
 				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
 			}
             _leaders.PushEnd(newPlayer);
@@ -173,19 +176,25 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerTy
         {
             TestPlayer *parent = _leaders.RandomElement();
 			TestPlayer *mutatedChild;
-			if (parent->p->_mutateOnlyDecisions) {
+			if (_trainingType == TRAINING_DECISIONS) {
 				mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
 			}
-			else {
+			else if (_trainingType == TRAINING_BUYS){
 				mutatedChild = new TestPlayer(parent->p->MutateOnlyBuys(cards, _gameOptions));
+			}
+			else {
+				mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
 			}
 
             while(rnd() >= _parameters.mutationTerminationProbability)
             {
-				if (parent->p->_mutateOnlyDecisions) {
+				if (_trainingType == TRAINING_DECISIONS) {
 					mutatedChild = new TestPlayer(parent->p->MutateOnlyDecisions(cards, _gameOptions));
 				}
-				else {
+				else if (_trainingType == TRAINING_BUYS){
+					mutatedChild = new TestPlayer(parent->p->MutateOnlyBuys(cards, _gameOptions));
+				}
+				else{
 					mutatedChild = new TestPlayer(parent->p->Mutate(cards, _gameOptions));
 				}
             }
@@ -770,8 +779,11 @@ void TestChamber::InitializeBuyPool(const CardDatabase &cards, PlayerType player
 			}
 			else{ newPlayer = NULL; }
 
-			if (newPlayer->p->_mutateOnlyDecisions) {
+			if (_trainingType == TRAINING_DECISIONS) {
 				newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+			}
+			else if (_trainingType == TRAINING_BUYS){
+				newPlayer->p = newPlayer->p->MutateOnlyBuys(cards, _gameOptions);
 			}
 			else {
 				newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
@@ -816,8 +828,11 @@ void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMe
 		TestPlayer *newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, buyMenu)));
 		
 
-		if (newPlayer->p->_mutateOnlyDecisions) {
+		if (_trainingType == TRAINING_DECISIONS) {
 			newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
+		}
+		else if (_trainingType == TRAINING_BUYS) {
+			newPlayer->p = newPlayer->p->MutateOnlyBuys(cards, _gameOptions);
 		}
 		else {
 			newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
@@ -987,6 +1002,8 @@ void TestChamber::StrategizeStartBuys(const CardDatabase &cards, const GameOptio
 	_gameOptions = options;
 	_metaSuffix = metaSuffix;
 	_directory = directory;
+	_trainingType = TRAINING_BUYS;
+	_playerType = playerType;
 
 	//
 	// Higher-ranked leaders receive higher weight to reward strategies that are able to defeat them
@@ -1065,6 +1082,9 @@ void TestChamber::StrategizeStartDecisions(const CardDatabase &cards, const Game
 	_gameOptions = options;
 	_metaSuffix = metaSuffix;
 	_directory = directory;
+
+	_trainingType = TRAINING_DECISIONS;
+	_playerType = playerType;
 
 	//
 	// Higher-ranked leaders receive higher weight to reward strategies that are able to defeat them

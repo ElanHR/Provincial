@@ -52,7 +52,7 @@ public:
 	virtual PlayerLearning* MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const =  0;
 	virtual PlayerLearning* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const = 0;
 	
-	const static boolean _mutateOnlyDecisions = false;
+	//const static boolean _mutateOnlyDecisions = false;
 };
 
 class PlayerHeuristic : public PlayerLearning

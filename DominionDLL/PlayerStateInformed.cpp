@@ -948,7 +948,7 @@ PlayerLearning* PlayerStateInformed::Mutate(const CardDatabase &cards, const Gam
 
 PlayerLearning* PlayerStateInformed::MutateOnlyBuys(const CardDatabase &cards, const GameOptions &options) const{
 	PlayerStateInformed *result = new PlayerStateInformed(_strategy->MutateOnlyBuys(cards, options));
-
+	Console::WriteLine("MUTATING BUYS!!!!");
 	if (rnd() <= 0.2)
 	{
 		result->_remodelGoldThreshold = Utility::Bound(result->_remodelGoldThreshold + AIUtility::Delta(), 0, 12);
