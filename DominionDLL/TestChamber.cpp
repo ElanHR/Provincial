@@ -481,13 +481,13 @@ void TestChamber::ComputeProgressionDecisions(const CardDatabase &cards, TestPla
 		players[leaderIndexA]->buyID = curID;
 	}
 
-	file << endl << "Leader\t0\t" << players.Last()->VisualizationDescriptionDecisionStrategy() << endl;
+	file << endl << "Leader\t0" << "\t" << players.Last()->VisualizationDescription(_supplyCards, true) << "\t" << players.Last()->VisualizationDescriptionDecisionStrategy() << endl;
 
 	file << endl << "Opponents:\t" << leaderCount << endl;
 	for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
 	{
 		//Console::WriteLine("Opponent " + String(leaderIndex) + ": " + String(results(leaderIndex, 0).winRatio[1]));
-		file << "Opponent " << leaderIndex << ":\t" << String((results(leaderIndex, 0).winRatio[1] - 0.5) * 200.0) << "\t" << players[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
+		file << "Opponent " << leaderIndex << ":\t" << String((results(leaderIndex, 0).winRatio[1] - 0.5) * 200.0) << "\t" << players[leaderIndex]->VisualizationDescription(_supplyCards, true) << "\t" << players[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	//file << endl << "Full description" << endl;
@@ -634,7 +634,7 @@ void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const V
 		for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++) if (leaderIndexA != leaderIndexB) averageWinRatio += results(leaderIndexA, leaderIndexB).winRatio[0];
 		if (leaderCount > 1) averageWinRatio /= double(leaderCount - 1);
 
-		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << "\t" << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
+		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << "\t" << players[leaderIndexA]->VisualizationDescription(_supplyCards, true) << "\t" << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	//file << endl << "Full description" << endl;
@@ -722,7 +722,7 @@ Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const 
 	file << endl << "Leaders:\t" << leaderCount << endl;
 	for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
 	{
-		file << "Leader " << leaderIndex << ":\t" << (_leaders[leaderIndex]->rating - 0.5) * 200.0 << "\t" << _leaders[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
+		file << "Leader " << leaderIndex << ":\t" << (_leaders[leaderIndex]->rating - 0.5) * 200.0 << "\t" << _leaders[leaderIndex]->VisualizationDescription(_supplyCards, true) << "\t" << _leaders[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	/*file << "Leaders" << endl;
@@ -1150,6 +1150,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 	_pool.Sort([](const TestPlayer *a, const TestPlayer *b) { return a->rating > b->rating; });
 
 	Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%" + " using player type:" + String(playerType));
+	Console::WriteLine(_pool[0]->VisualizationDescription(_supplyCards, true));
 	Console::WriteLine(_pool[0]->VisualizationDescriptionDecisionStrategy());
 
 	AssignNewLeaders(cards, playerType);
