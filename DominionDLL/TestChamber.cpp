@@ -807,7 +807,7 @@ void TestChamber::InitializeBuyPool(const CardDatabase &cards, PlayerType player
     }*/
 }
 
-const int DECISION_POOL_SIZE = 1000;
+const int DECISION_POOL_SIZE = 100;
 void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMenu)
 {
 	_pool.FreeMemory();
