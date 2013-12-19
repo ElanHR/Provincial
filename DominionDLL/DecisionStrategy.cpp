@@ -8,30 +8,6 @@ DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) :
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s, const String &decString) : BuyAgendaMenu(cards, s){
 	Init(decString);
-	// decision:
-	regex decisionRegex("\{d:(\d+)(.*)\}");
-	// feature and weight
-	regex fwtRegex("\(f:(\d+) wt:(.*)\))");
-	/*
-	const std::string s = "Quick brown fox.";
-
-	std::regex words_regex("[^\\s]+");
-	auto words_begin =
-	std::sregex_iterator(s.begin(), s.end(), words_regex);
-	auto words_end = std::sregex_iterator();
-
-	std::cout << "Found "
-	<< std::distance(words_begin, words_end)
-	<< " words:\n";
-
-	for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
-	std::smatch match = *i;
-	std::string match_str = match.str();
-	std::cout << match_str << '\n';
-	}
-	*/
-
-	//LoadDecisionWeightsFromFile(s);
 }
 
 // copying the other one, should copy 
@@ -124,17 +100,49 @@ void DecisionStrategy::Init(){
 
 void DecisionStrategy::Init(const String &decisions){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
-	// TODO parse the decisions string
 
-	for (int d = 0; d < NUM_DECISIONS; d++){
+	// decision:
+	regex decRegex("\\{d:(\\d+)(.*)\\}");
+	// feature and weight
+	regex fwtRegex("\\(f:(\\d+) wt:(.*)\\))");
+	Console::WriteLine("before convert:\n" + decisions);
+	std::string d(decisions.CString(), decisions.Length());
+	Console::WriteString("after convert:\n");
+	Console::WriteString(d.c_str());
+	Console::WriteLine("");
+	auto decBegin = sregex_iterator(d.begin(), d.end(), decRegex);
+	auto decEnd = sregex_iterator();
+	Console::WriteLine("Found num decisions:" + std::distance(decBegin, decEnd));
+	// for each decision:
+	UINT dIndex = 0;
+	for (std::sregex_iterator it = decBegin; it != decEnd; ++it) {
+		std::smatch match = *it;
+		std::string match_str = match.str();
+		Console::WriteString("found decision:");
+		Console::WriteLine(match_str.c_str());
+		// add a vector to decision weights
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
-		// only add pertinent features
-		Vector<Feature>* pertinentFeatures = getPertinentFeatures(static_cast<Decisions>(d));
-		for (UINT f = 0; f < pertinentFeatures->Length(); f++) {
-			Feature feature = pertinentFeatures->at(f);
-			FeatureWeight fw(feature, initGauss(gen));
-			_decisionWeights->at(d)->PushEnd(fw);
+		// for each feature weight:
+		auto featureBegin = sregex_iterator(match_str.begin(), match_str.end(), fwtRegex);
+		auto featureEnd = sregex_iterator();
+		Console::WriteLine("Found num fwts:" + std::distance(featureBegin, featureEnd));
+		for (std::sregex_iterator itf = featureBegin; itf != featureEnd; ++itf) {
+			// get the matches
+			std::smatch fmatch = *itf;
+			std::string match_f = match[0];
+			std::string match_wt = match[1];
+			Console::WriteString("f:");
+			Console::WriteString(match_f.c_str());
+			Console::WriteString(" wt:");
+			Console::WriteString(match_wt.c_str());
+			Console::WriteString("\n");
+			// and add them!
+			Feature f = static_cast<Feature>(std::stoi(match_f));
+			double weight = std::stod(match_wt);
+			FeatureWeight fw(f, weight);
+			_decisionWeights->at(dIndex)->PushEnd(fw);
 		}
+		dIndex++;
 	}
 }
 
