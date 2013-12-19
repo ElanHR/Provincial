@@ -324,7 +324,7 @@ namespace BaseCodeApp
             LoadShorthand(textBoxShorthand.Text, panelPlayer2, textBoxPlayer2Estate, textBoxPlayer2Duchy, textBoxPlayer2Province);
         }
 
-        public String AIString(bool isDecisionsAI = false)
+        public String AIString(String p1Decisions = "", String p2Decisions = "")
         {
             String player1String = "Human";
             if (comboPlayer1.SelectedItem.ToString() != "Human")
@@ -333,9 +333,7 @@ namespace BaseCodeApp
                                 "d" + textBoxPlayer1Duchy.Text.ToString() + "-" +
                                 "p" + textBoxPlayer1Province.Text.ToString() + "-" +
                                 PanelToShorthandEncoding(panelPlayer1).Replace("@", "~");
-                if(isDecisionsAI) {
-
-                }
+                player1String += p1Decisions;
             }
 
             String player2String = "Human";
@@ -345,10 +343,7 @@ namespace BaseCodeApp
                                 "d" + textBoxPlayer2Duchy.Text.ToString() + "-" +
                                 "p" + textBoxPlayer2Province.Text.ToString() + "-" +
                                 PanelToShorthandEncoding(panelPlayer2).Replace("@", "~");
-                if (isDecisionsAI)
-                {
-
-                }
+                player2String += p2Decisions;
             }
             Console.WriteLine("AI STRING:\n" + player1String + "\n@\n" + player2String);
             return player1String + "@" + player2String;
@@ -486,31 +481,59 @@ namespace BaseCodeApp
             {
                 Console.WriteLine("have decision file!");
             }
+            else
+            {
+                Console.WriteLine("no decisions found.");
+            }
+            //Console.WriteLine("file lines:");
+            //String[] array = lines.ToArray();
+            //for (uint lineIndex = 0; lineIndex < lines.Count(); lineIndex++ )
+            //{
+            //    Console.WriteLine(array[lineIndex]);
+            //}
             ResetPlayerLists();
             topLeader = lines[leaderStartIndex + 0 + 1].Split('\t')[2];
+            List<String> aiDecisions = new List<String>();
+            if (isDecisionsFile)
+            {
+                //topLeader += "\t" + lines[leaderStartIndex + 0 + 1].Split('\t')[3];
+                aiDecisions.Add("\t" + lines[leaderStartIndex + 0 + 1].Split('\t')[3]);
+            }
+            //Console.WriteLine("top leader:\n");
+            //Console.WriteLine(topLeader);
             for (int leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
             {
                 String shorthand = lines[leaderStartIndex + leaderIndex + 1].Split('\t')[2];
                 if (isDecisionsFile)
                 {
-                    shorthand += "\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3];
+                    //shorthand += "\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3];
+                    aiDecisions.Add("\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3]);
                 }
+                //Console.WriteLine("shorthand:\n");
+                //Console.WriteLine(shorthand);
                 comboPlayer1.Items.Add(shorthand);
                 comboPlayer2.Items.Add(shorthand);
             }
-
+            int selOne = 2;
+            int selTwo = 0;
             try
             {
-                comboPlayer1.SelectedIndex = 2;
-                comboPlayer2.SelectedIndex = 0;
+                comboPlayer1.SelectedIndex = selOne;
+                comboPlayer2.SelectedIndex = selTwo;
 
                 trainingTypeBox.SelectedIndex = 0;
             }
             catch { }
 
             visualizationFilename = filename.Replace(".txt", ".png");
-
-            parentWindow.NewGame(AIString(isDecisionsFile));
+            if (aiDecisions.Count() != 0)
+            {
+                parentWindow.NewGame(AIString(aiDecisions[selOne], aiDecisions[selTwo]));
+            }
+            else
+            {
+                parentWindow.NewGame(AIString());
+            }
         }
 
         private void buttonLoadAIFile_Click(object sender, EventArgs e)
