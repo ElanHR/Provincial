@@ -482,7 +482,10 @@ namespace BaseCodeApp
                 MessageBox.Show("This is not a valid AI file. Select a text file in the kingdomsIntermediate or kingdomsFinal directories.");
                 return;
             }
-
+            if (isDecisionsFile)
+            {
+                Console.WriteLine("have decision file!");
+            }
             ResetPlayerLists();
             topLeader = lines[leaderStartIndex + 0 + 1].Split('\t')[2];
             for (int leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
