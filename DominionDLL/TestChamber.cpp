@@ -725,20 +725,20 @@ Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const 
 
 	file << endl << "Index\tRating";
 	for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++) file << "\tL" << leaderIndex;
-	for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << _supplyCards[supplyIndex]->PrettyName();
+	//for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << _supplyCards[supplyIndex]->PrettyName();
 	file << "\tName" << endl;
 	for (UINT playerIndex = 0; playerIndex < _pool.Length(); playerIndex++)
 	{
 		file << playerIndex << '\t' << _pool[playerIndex]->rating;
 
-		Vector<double> buyRatio(supplyCount, 0.0);
+		//Vector<double> buyRatio(supplyCount, 0.0);
 		for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++)
 		{
-			for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) buyRatio[supplyIndex] += allResults(playerIndex, leaderIndex).buyRatio[supplyIndex];
+			//for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) buyRatio[supplyIndex] += allResults(playerIndex, leaderIndex).buyRatio[supplyIndex];
 			file << '\t' << allResults(playerIndex, leaderIndex).winRatio[0];
 		}
 
-		for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << buyRatio[supplyIndex];
+		//for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << buyRatio[supplyIndex];
 
 		file << '\t' << _pool[playerIndex]->p->ControllerName() << endl;
 	}
