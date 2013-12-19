@@ -324,7 +324,7 @@ namespace BaseCodeApp
             LoadShorthand(textBoxShorthand.Text, panelPlayer2, textBoxPlayer2Estate, textBoxPlayer2Duchy, textBoxPlayer2Province);
         }
 
-        public String AIString()
+        public String AIString(bool isDecisionsAI = false)
         {
             String player1String = "Human";
             if (comboPlayer1.SelectedItem.ToString() != "Human")
@@ -333,6 +333,9 @@ namespace BaseCodeApp
                                 "d" + textBoxPlayer1Duchy.Text.ToString() + "-" +
                                 "p" + textBoxPlayer1Province.Text.ToString() + "-" +
                                 PanelToShorthandEncoding(panelPlayer1).Replace("@", "~");
+                if(isDecisionsAI) {
+
+                }
             }
 
             String player2String = "Human";
@@ -342,7 +345,12 @@ namespace BaseCodeApp
                                 "d" + textBoxPlayer2Duchy.Text.ToString() + "-" +
                                 "p" + textBoxPlayer2Province.Text.ToString() + "-" +
                                 PanelToShorthandEncoding(panelPlayer2).Replace("@", "~");
+                if (isDecisionsAI)
+                {
+
+                }
             }
+            Console.WriteLine("AI STRING:" + player1String + "@" + player2String);
             return player1String + "@" + player2String;
         }
 
@@ -454,8 +462,10 @@ namespace BaseCodeApp
 
             int leaderStartIndex;
             int leaderCount;
+            bool isDecisionsFile = false;
             try
             {
+                isDecisionsFile = lines.Exists(delegate(String s) { return s.Contains("Decisions"); });
                 String kingdomCards = lines.Find(delegate(String s) { return s.StartsWith("Kingdom cards:"); }).Split('\t')[1];
                 parentWindow.NewKingdomCards(kingdomCards.Replace("@", "|"));
 
@@ -478,6 +488,10 @@ namespace BaseCodeApp
             for (int leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
             {
                 String shorthand = lines[leaderStartIndex + leaderIndex + 1].Split('\t')[2];
+                if (isDecisionsFile)
+                {
+                    shorthand += "\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3];
+                }
                 comboPlayer1.Items.Add(shorthand);
                 comboPlayer2.Items.Add(shorthand);
             }
@@ -492,7 +506,8 @@ namespace BaseCodeApp
             catch { }
 
             visualizationFilename = filename.Replace(".txt", ".png");
-            parentWindow.NewGame(AIString());
+
+            parentWindow.NewGame(AIString(isDecisionsFile));
         }
 
         private void buttonLoadAIFile_Click(object sender, EventArgs e)
