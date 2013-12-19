@@ -28,13 +28,6 @@ String TestPlayer::VisualizationDescription(const Vector<Card*> &supplyCards, bo
         }
     }
     result.PopEnd();
-	// now print our decision strategy info
-	if ( p->getPlayerType() == STATEINFORMED_PLAYER ) {
-		//result += "\nDecisionStrategy:\t";
-		const DecisionStrategy *strat = dynamic_cast<const DecisionStrategy*>(&p->Agenda());
-		//result += strat->getStringInfo();
-		//strat->SaveDecisionWeightsToFile("decision_" + result);
-	}
     return result;
 }
 
@@ -695,6 +688,9 @@ void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMe
 	{
 		TestPlayer *newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, buyMenu)));
 		
+		Console::WriteLine("new player:");
+		Console::WriteLine(newPlayer->VisualizationDescription(_supplyCards, true));
+		Console::WriteLine(newPlayer->VisualizationDescriptionDecisionStrategy());
 
 		if (_trainingType == TRAINING_DECISIONS) {
 			newPlayer->p = newPlayer->p->MutateOnlyDecisions(cards, _gameOptions);
@@ -705,6 +701,9 @@ void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMe
 		else {
 			newPlayer->p = newPlayer->p->Mutate(cards, _gameOptions);
 		}
+		Console::WriteLine("np after mutate:");
+		Console::WriteLine(newPlayer->VisualizationDescription(_supplyCards, true));
+		Console::WriteLine(newPlayer->VisualizationDescriptionDecisionStrategy());
 		_pool.PushEnd(newPlayer);
 		//newPlayer->p = new PlayerHeuristic(new BuyAgendaMenu(menu));
 
