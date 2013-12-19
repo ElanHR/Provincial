@@ -451,7 +451,7 @@ void TestChamber::ComputeProgressionDecisions(const CardDatabase &cards, TestPla
 	Console::WriteLine("Generating decisions progression comparison for generation " + String(_generation) + _metaSuffix);
 
 	ofstream file(filename.CString());
-	file << "Decisions Progression" << endl;
+	file << "Progression Decisions" << endl;
 
 	Vector<TestPlayer*> leaderList(1, leader);
 	Grid<TestResult> results = RunAllPairsTests(cards, players, leaderList, _parameters.visualizationGameCount, _parameters.visualizationGameCount);
@@ -580,7 +580,7 @@ void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const V
 	ofstream file(filename.CString());
 	Grid<TestResult> results = RunAllPairsTests(cards, players, players, gameCount, gameCount);
 
-	file << "Leaderboard" << endl;
+	file << "Leaderboard Decisions" << endl;
 	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
 
 	const UINT supplyCount = _supplyCards.Length();
@@ -707,7 +707,7 @@ Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const 
 	}
 
 	ofstream file(filename.CString());
-	file << "Generation" << endl;
+	file << "Generation Decisions" << endl;
 	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
 
 	file << endl << "Leaders:\t" << leaderCount << endl;
@@ -1136,7 +1136,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 
 	GenerateNewPool(cards, playerType);
 
-	SaveVisualizationFiles(cards);
+	SaveVisualizationFilesDecisions(cards);
 
 	_generation++;
 }
