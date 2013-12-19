@@ -104,7 +104,7 @@ String DecisionStrategy::getStringInfo() const {
 
 Decisions DecisionStrategy::getActionPlayDecision(Card* c) const {
 	String name = c->name;
-	Console::WriteLine("get play decision for card:" + name);
+	//Console::WriteLine("get play decision for card:" + name);
 	if (name == "cellar") {
 		return Cellar_Play;
 	}
@@ -178,6 +178,7 @@ Decisions DecisionStrategy::getActionPlayDecision(Card* c) const {
 		return Adventurer_Play;
 	}
 	else{ // default
+		Console::WriteLine("NO DECISION FOR: " + name);
 		return INVALID_DECISION;
 	}
 }
