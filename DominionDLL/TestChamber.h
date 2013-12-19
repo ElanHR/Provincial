@@ -85,6 +85,8 @@ private:
     void ComputeCounters(const CardDatabase &cards, const String &filename);
     void ComputeProgression(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
     void ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
+
+	void ComputeLeaderboardDecisions(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
 	
 	void InitializeBuyPool(const CardDatabase &cards, PlayerType playerType);
 	void InitializeDecisionPool(const CardDatabase &cards, String buyMenu);

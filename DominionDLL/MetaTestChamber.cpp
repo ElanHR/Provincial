@@ -46,7 +46,7 @@ void MetaTestChamber::StrategizeStep(const CardDatabase &cards, TrainingType tra
 		if (trainingType == TRAINING_BUYS)
 			chamber.ComputeLeaderboard(cards, metaLeaders, chamber._directory + "leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
 		else if (trainingType == TRAINING_DECISIONS)
-			chamber.ComputeLeaderboard(cards, metaLeaders, chamber._directory + "decision-leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
+			chamber.ComputeLeaderboardDecisions(cards, metaLeaders, chamber._directory + "decision-leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
 
     }
 }

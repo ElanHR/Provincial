@@ -527,6 +527,73 @@ void TestChamber::ComputeLeaderboard(const CardDatabase &cards, const Vector<Tes
     }
 }
 
+void TestChamber::ComputeLeaderboardDecisions(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount)
+{
+	Console::WriteLine("Generating decisions leaderboard comparison for generation " + String(_generation) + _metaSuffix);
+
+	const UINT leaderCount = players.Length();
+
+	ofstream file(filename.CString());
+	Grid<TestResult> results = RunAllPairsTests(cards, players, players, gameCount, gameCount);
+
+	file << "Leaderboard" << endl;
+	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
+
+	const UINT supplyCount = _supplyCards.Length();
+
+	for (UINT leaderIndexA = 0; leaderIndexA < leaderCount; leaderIndexA++)
+	{
+		String curID = "";
+		for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++)
+		{
+			char c = '0';
+			for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++)
+			{
+				if (_supplyCards[supplyIndex]->expansion == "core" || results(leaderIndexA, leaderIndexB).buyRatio[supplyIndex] > 0.25) c = '1';
+			}
+			curID.PushEnd(c);
+		}
+		players[leaderIndexA]->buyID = curID;
+	}
+
+	file << endl << "Buy order:\t" << players[0]->VisualizationDescription(_supplyCards, true) << endl;
+
+	file << endl << "Tournament" << endl;
+
+	file << "player";
+	for (UINT leaderIndexA = 0; leaderIndexA < leaderCount; leaderIndexA++) file << "\t" << leaderIndexA;
+	file << endl;
+
+	for (UINT leaderIndexA = 0; leaderIndexA < leaderCount; leaderIndexA++)
+	{
+		file << leaderIndexA;
+		for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++)
+		{
+			file << "\t" << (results(leaderIndexA, leaderIndexB).winRatio[0] - 0.5) * 200.0;
+		}
+		file << endl;
+	}
+
+	file << endl << "Leaders:\t" << leaderCount << endl;
+	for (UINT leaderIndexA = 0; leaderIndexA < leaderCount; leaderIndexA++)
+	{
+		double averageWinRatio = 0.0;
+		for (UINT leaderIndexB = 0; leaderIndexB < leaderCount; leaderIndexB++) if (leaderIndexA != leaderIndexB) averageWinRatio += results(leaderIndexA, leaderIndexB).winRatio[0];
+		if (leaderCount > 1) averageWinRatio /= double(leaderCount - 1);
+
+		file << "Leader " << leaderIndexA << ":\t" << (averageWinRatio - 0.5) * 200.0 << endl << players[leaderIndexA]->VisualizationDescriptionDecisionStrategy() << endl;
+	}
+
+	//file << endl << "Full description" << endl;
+	//for(UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
+	//{
+	//    file << "Leader " << leaderIndex << ":\t" << players[leaderIndex]->p->ControllerName() << endl;
+	//}
+}
+
+
+
+
 Grid<TestResult> TestChamber::TestBuyPool(const CardDatabase &cards, const String &filename)
 {
     Grid<TestResult> allResults = RunAllPairsTests(cards, _pool, _leaders, 200,_parameters.standardGameCount);
