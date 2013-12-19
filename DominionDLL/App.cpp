@@ -155,22 +155,22 @@ UINT32 App::ProcessCommand(const String &command)
         else options = _game.data().options;
 
 			
-		if (parameters[3] == "Train_BuyOrder"){
+		if (parameters[1] == "Train_BuyOrder"){
 			Console::WriteLine("Train_BuyOrder");
-			_chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(),TRAINING_BUYS, HEURISTIC_PLAYER,"");
+			_chamber.StrategizeStart(_cards, options, parameters[2], parameters[3].ConvertToInteger(),TRAINING_BUYS, HEURISTIC_PLAYER,"");
 		}
-		else if (parameters[3] == "Train_Decisions"){
+		else if (parameters[1] == "Train_Decisions"){
 			Console::WriteLine("Train_Decisions");
-			_chamber.StrategizeStart(_cards, options, parameters[1], parameters[2].ConvertToInteger(), TRAINING_DECISIONS,STATEINFORMED_PLAYER,parameters[4]);
+			_chamber.StrategizeStart(_cards, options, parameters[2], parameters[3].ConvertToInteger(), TRAINING_DECISIONS,STATEINFORMED_PLAYER,parameters[4]);
 		}
 
     }
     else if(parameters[0] == "trainAIStep")
     {
-		if (parameters[3] == "Train_BuyOrder"){
+		if (parameters[1] == "Train_BuyOrder"){
 			_chamber.StrategizeStep(_cards, TRAINING_BUYS, HEURISTIC_PLAYER);
 		}
-		else if (parameters[3] == "Train_Decisions"){
+		else if (parameters[1] == "Train_Decisions"){
 			_chamber.StrategizeStep(_cards, TRAINING_DECISIONS, STATEINFORMED_PLAYER);
 		}
     }

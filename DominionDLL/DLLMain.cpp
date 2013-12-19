@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
     for (int generationIndex = 0; generationIndex < generationCount; generationIndex++)
     {
-		app->ProcessCommand("trainAIStep@" + trainingType + "@" + directory + ");
+		app->ProcessCommand("trainAIStep@" + trainingType + "@" + directory);
     }
 
     return 0;

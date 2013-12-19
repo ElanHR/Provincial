@@ -116,7 +116,6 @@ private:
     String _metaSuffix;
     int _generation;
     String _directory;
-
 };
 
 struct TestChamberTask : public WorkerThreadTask
