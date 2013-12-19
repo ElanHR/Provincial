@@ -18,8 +18,11 @@ UINT32 App::ProcessCommand(const String &command)
     Vector<String> parameters = command.Partition("@");
 
 	Console::WriteLine("==== parameters["+ String(parameters.Length()) +"]====");
+	int par = 0;
 	for (String param : parameters){
+		Console::WriteLine("par:" + String(par));
 		Console::WriteLine(param);
+		par++;
 	}
 	Console::WriteLine("==========");
 
@@ -114,24 +117,30 @@ UINT32 App::ProcessCommand(const String &command)
 
 		// TODO if there's decision info?
 
-        playerList.PushEnd(PlayerInfo(0, "Heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~","@")))));
-
-		Console::WriteLine("param:" + parameters[2]);
+		Console::WriteLine("param:" + parameters[1]);
 		// TODO if there's decision info?
-		Vector<String> parts = parameters[2].Partition("\t");
+		Vector<String> parts = parameters[1].Partition("\t");
 		if (parts.Length() == 2) {
-			Console::WriteLine("using state informed player");
-			playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
+			Console::WriteLine("using state informed player player 1");
+			playerList.PushEnd(PlayerInfo(0, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
 		}
 		else if (parts.Length() == 1) {
-			Console::WriteLine("using heuristic player");
-			playerList.PushEnd(PlayerInfo(1, "heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+			Console::WriteLine("using heuristic player player 1");
+			playerList.PushEnd(PlayerInfo(0, "heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
 		}
 		else {
 			Console::WriteLine("AAHH BAD SPLIT BY TABS");
 			SignalError("AAHH BAD SPLIT BY TABS");
 			return 1;
 		}
+
+
+		Console::WriteLine("param:" + parameters[2]);
+
+		Console::WriteLine("using heuristic player player 2");
+        playerList.PushEnd(PlayerInfo(1, "Heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~","@")))));
+
+		
 
         logging = true;
         decisionText = true;
@@ -147,7 +156,7 @@ UINT32 App::ProcessCommand(const String &command)
         params.options = _game.data().options;
 
 		//TODO: 
-        TestResult result = chamber.Test(_cards, params,STATEINFORMED_PLAYER);
+        TestResult result = chamber.Test(_cards, params);
         _AITestResult = result.winRatio[0];
     }
     else if(parameters[0] == "response")

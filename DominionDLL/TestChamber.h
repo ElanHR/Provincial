@@ -78,7 +78,7 @@ public:
 	void StrategizeStartDecisions(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType, String buyMenu);
 	void StrategizeStepDecisions(const CardDatabase &cards, PlayerType playerType);
 
-    TestResult Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested, bool useConsole=true);
+    TestResult Test(const CardDatabase &cards, const TestParameters &params, bool useConsole=true);
 
 private:
     friend class MetaTestChamber;

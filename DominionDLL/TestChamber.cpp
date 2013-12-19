@@ -50,7 +50,7 @@ void TestChamberTask::Run(ThreadLocalStorage *threadLocalStorage)
 
 	//TODO:
 
-    *result = chamber->Test(*cards, params,STATEINFORMED_PLAYER, false);
+    *result = chamber->Test(*cards, params, false);
 }
 
 void TestChamber::FreeMemory()
@@ -720,7 +720,7 @@ void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMe
 }
 
 
-TestResult TestChamber::Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested,bool useConsole)
+TestResult TestChamber::Test(const CardDatabase &cards, const TestParameters &params,bool useConsole)
 {
 
 #ifndef LOGGING_CONSTANT

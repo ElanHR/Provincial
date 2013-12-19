@@ -20,8 +20,8 @@ namespace BaseCodeApp
 
         String trainingType = "";
         String topLeader = "";
-        
 
+        List<String> _aiDecisions = new List<String>();
 
 
 
@@ -352,13 +352,44 @@ namespace BaseCodeApp
         private void buttonCompareAIs_Click(object sender, EventArgs e)
         {
             String parameters = AIString();
-            if (parameters.Contains("Human"))
+            if (_aiDecisions.Count() > 0)
             {
-                MessageBox.Show("Humans are not valid test subjects.", "Error");
+                // use our top ai for p1
+                parameters = AIString(_aiDecisions[0], "");
+            }
+            Console.WriteLine("parameters");
+            Console.WriteLine(parameters);
+            String[] splitparams = parameters.Split('@');
+            String newparams = "";
+            for (uint stri = 0; stri < splitparams.Length; stri++)
+            {
+                if (stri > 0)
+                {
+                    newparams += "@";
+                }
+                if (splitparams[stri] == "Human")
+                {
+                    newparams += "e3-d4-p8-gold@99|militia@1|market@10|militia@1|market@1|silver@99|moat@1".Replace('@', '~');
+                }
+                else
+                {
+                    newparams += splitparams[stri];
+                }
+            }
+            Console.WriteLine("new params:\n"+newparams);
+           //if (parameters.Contains("Human"))
+            //{
+            //    MessageBox.Show("Humans are not valid test subjects.", "Error");
+            //    return;
+            //}
+            DialogResult dresult = MessageBox.Show("This will launch a new process that compares your loaded ai vs a heuristic.  \nEven though the dropdown says 'human' you will not be playing.  You will play the following parameters:\n" + newparams + "\nAre you sure you want to continue?",
+                           "Caution", MessageBoxButtons.YesNo);
+            if (dresult != DialogResult.Yes)
+            {
                 return;
             }
-            
-            DLLInterface.ProcessCommand("testAIs@" + parameters);
+
+            DLLInterface.ProcessCommand("testAIs@" + newparams);
             parentWindow.InitializeSupply();
             parentWindow.UpdateAllState();
 
@@ -493,11 +524,12 @@ namespace BaseCodeApp
             //}
             ResetPlayerLists();
             topLeader = lines[leaderStartIndex + 0 + 1].Split('\t')[2];
-            List<String> aiDecisions = new List<String>();
+            _aiDecisions.Clear();
+            //aiDecisions = new List<String>();
             if (isDecisionsFile)
             {
                 //topLeader += "\t" + lines[leaderStartIndex + 0 + 1].Split('\t')[3];
-                aiDecisions.Add("\t" + lines[leaderStartIndex + 0 + 1].Split('\t')[3]);
+                _aiDecisions.Add("\t" + lines[leaderStartIndex + 0 + 1].Split('\t')[3]);
             }
             //Console.WriteLine("top leader:\n");
             //Console.WriteLine(topLeader);
@@ -507,7 +539,7 @@ namespace BaseCodeApp
                 if (isDecisionsFile)
                 {
                     //shorthand += "\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3];
-                    aiDecisions.Add("\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3]);
+                    _aiDecisions.Add("\t" + lines[leaderStartIndex + leaderIndex + 1].Split('\t')[3]);
                 }
                 //Console.WriteLine("shorthand:\n");
                 //Console.WriteLine(shorthand);
@@ -526,9 +558,9 @@ namespace BaseCodeApp
             catch { }
 
             visualizationFilename = filename.Replace(".txt", ".png");
-            if (aiDecisions.Count() != 0)
+            if (_aiDecisions.Count() != 0)
             {
-                parentWindow.NewGame(AIString(aiDecisions[selOne], aiDecisions[selTwo]));
+                parentWindow.NewGame(AIString(_aiDecisions[selOne], _aiDecisions[selTwo]));
             }
             else
             {
