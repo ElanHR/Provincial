@@ -499,8 +499,9 @@ namespace BaseCodeApp
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/generations");
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/leaderboard");
             Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/progression");
-            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decisions");
-            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decisions/leaders");
+            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decision-generations");
+            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decision-leaderboard");
+            Directory.CreateDirectory("kingdomsIntermediate/" + directory + "/decision-progression");
 
 
             using (StreamWriter parameterFile = new System.IO.StreamWriter("TournamentParameters.txt"))

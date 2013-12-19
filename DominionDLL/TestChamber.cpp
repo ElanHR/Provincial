@@ -914,7 +914,7 @@ void TestChamber::SaveVisualizationFiles(const CardDatabase &cards)
 {
 	if (_generation % 4 == 0)
 	{
-		ComputeLeaderboard(cards, _leaders, _directory + "leaderboard/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt", _parameters.visualizationGameCount);
+		ComputeLeaderboard(cards, _leaders, _directory + "decision-leaderboard/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt", _parameters.visualizationGameCount);
 		_bestLeaderHistory.PushEnd(_leaders[0]);
 
 		for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++)
@@ -934,7 +934,7 @@ void TestChamber::SaveVisualizationFiles(const CardDatabase &cards)
 			}
 		}
 
-		ComputeProgression(cards, _leaders[0], _bestLeaderHistory, _directory + "progression/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
+		ComputeProgression(cards, _leaders[0], _bestLeaderHistory, _directory + "decision-progression/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
 
 		if (_generation % 64 == 0)
 		{
@@ -1120,7 +1120,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 	//
 	// Run all AIs in the current pool against the leaders
 	//
-	Grid<TestResult> poolResults = TestDecisionPool(cards, _directory + "generations/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
+	Grid<TestResult> poolResults = TestDecisionPool(cards, _directory + "decision-generations/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
 
 	AssignBuyIDs(poolResults);
 
@@ -1130,7 +1130,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 	_pool.Sort([](const TestPlayer *a, const TestPlayer *b) { return a->rating > b->rating; });
 
 	Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%" + " using player type:" + String(playerType));
-	Console::WriteLine(_pool[0]->VisualizationDescription(_supplyCards, true));
+	Console::WriteLine(_pool[0]->VisualizationDescriptionDecisionStrategy());
 
 	AssignNewLeaders(cards, playerType);
 
