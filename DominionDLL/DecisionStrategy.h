@@ -162,6 +162,7 @@ typedef enum Feature{
 public:
 
 	DecisionStrategy(const CardDatabase &cards, const String &s);
+	DecisionStrategy(const CardDatabase &cards, const String &s, const String &decString);
 
 	DecisionStrategy(BuyMenu &m);
 	DecisionStrategy(BuyMenu &m, Vector<Vector<FeatureWeight>*>* fws);
@@ -201,7 +202,7 @@ public:
 private:
 
 	void Init();
-	
+	void Init(const String &decString);
 	
 
 	Vector<Vector<FeatureWeight>*>* _decisionWeights;

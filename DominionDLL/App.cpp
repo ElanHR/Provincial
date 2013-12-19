@@ -63,10 +63,16 @@ UINT32 App::ProcessCommand(const String &command)
         else
         {
             if(parameters[1] == "Human") playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHuman));
-            else playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~","@")))));
+			else {
+				// TODO if there's decision info?
+				playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
+			}
 
             if(parameters[2] == "Human") playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHuman));
-            else playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~","@")))));
+			else {
+				// TODO if there's decision info?
+				playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+			}
         }
 
         logging = true;
@@ -77,6 +83,8 @@ UINT32 App::ProcessCommand(const String &command)
     else if(parameters[0] == "testAIs")
     {
         Vector<PlayerInfo> playerList;
+
+		// TODO if there's decision info?
 
         playerList.PushEnd(PlayerInfo(0, "Heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~","@")))));
         playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parameters[2].FindAndReplace("~","@")))));

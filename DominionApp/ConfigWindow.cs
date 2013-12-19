@@ -350,7 +350,7 @@ namespace BaseCodeApp
 
                 }
             }
-            Console.WriteLine("AI STRING:" + player1String + "@" + player2String);
+            Console.WriteLine("AI STRING:\n" + player1String + "\n@\n" + player2String);
             return player1String + "@" + player2String;
         }
 
