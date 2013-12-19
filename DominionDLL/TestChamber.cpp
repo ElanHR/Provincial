@@ -713,7 +713,7 @@ Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const 
 	file << endl << "Leaders:\t" << leaderCount << endl;
 	for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
 	{
-		file << "Leader " << leaderIndex << ":\t" << (_leaders[leaderIndex]->rating - 0.5) * 200.0 << "\t" << _leaders[leaderIndex]->VisualizationDescription(_supplyCards, true, false) << endl;
+		file << "Leader " << leaderIndex << ":\t" << (_leaders[leaderIndex]->rating - 0.5) * 200.0 << "\t" << _leaders[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
 	}
 
 	/*file << "Leaders" << endl;
