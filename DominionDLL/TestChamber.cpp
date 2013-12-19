@@ -444,6 +444,50 @@ void TestChamber::ComputeProgression(const CardDatabase &cards, TestPlayer *lead
     //}
 }
 
+void TestChamber::ComputeProgressionDecisions(const CardDatabase &cards, TestPlayer *leader, const Vector<TestPlayer*> &players, const String &filename)
+{
+	const UINT leaderCount = players.Length();
+
+	Console::WriteLine("Generating decisions progression comparison for generation " + String(_generation) + _metaSuffix);
+
+	ofstream file(filename.CString());
+	file << "Decisions Progression" << endl;
+
+	Vector<TestPlayer*> leaderList(1, leader);
+	Grid<TestResult> results = RunAllPairsTests(cards, players, leaderList, _parameters.visualizationGameCount, _parameters.visualizationGameCount);
+
+	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
+
+	const UINT supplyCount = _supplyCards.Length();
+
+	for (UINT leaderIndexA = 0; leaderIndexA < leaderCount; leaderIndexA++)
+	{
+		String curID = "";
+		for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++)
+		{
+			char c = '0';
+			if (_supplyCards[supplyIndex]->expansion == "core" || results(leaderIndexA, 0).buyRatio[supplyIndex] > 0.25) c = '1';
+			curID.PushEnd(c);
+		}
+		players[leaderIndexA]->buyID = curID;
+	}
+
+	file << endl << "Leader\t0\t" << players.Last()->VisualizationDescriptionDecisionStrategy() << endl;
+
+	file << endl << "Opponents:\t" << leaderCount << endl;
+	for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
+	{
+		//Console::WriteLine("Opponent " + String(leaderIndex) + ": " + String(results(leaderIndex, 0).winRatio[1]));
+		file << "Opponent " << leaderIndex << ":\t" << String((results(leaderIndex, 0).winRatio[1] - 0.5) * 200.0) << "\t" << players[leaderIndex]->VisualizationDescriptionDecisionStrategy() << endl;
+	}
+
+	//file << endl << "Full description" << endl;
+	//for(UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
+	//{
+	//    file << "Opponent " << leaderIndex << ":\t" << players[leaderIndex]->p->ControllerName() << endl;
+	//}
+}
+
 void TestChamber::ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount)
 {
     Console::WriteLine("Generating leaderboard comparison for generation " + String(_generation) + _metaSuffix);
@@ -891,6 +935,40 @@ void TestChamber::SaveVisualizationFiles(const CardDatabase &cards)
 		}
 
 		ComputeProgression(cards, _leaders[0], _bestLeaderHistory, _directory + "progression/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
+
+		if (_generation % 64 == 0)
+		{
+			//ComputeCounters(cards, directory + "counters/" + String::ZeroPad(_generation, 3) + "_" + String(_metaIndex) + ".txt");
+		}
+	}
+}
+
+void TestChamber::SaveVisualizationFilesDecisions(const CardDatabase &cards)
+{
+	if (_generation % 4 == 0)
+	{
+		ComputeLeaderboardDecisions(cards, _leaders, _directory + "decision-leaderboard/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt", _parameters.visualizationGameCount);
+		_bestLeaderHistory.PushEnd(_leaders[0]);
+
+		for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++)
+		{
+			const DecisionStrategy *strat = dynamic_cast<const DecisionStrategy*>(&_leaders[leaderIndex]->p->Agenda());
+			UINT curHash = strat->getStringInfo().Hash32();
+			if (_allLeaderHistoryHashes.Contains(curHash))
+			{
+				//
+				// Override the previous version of this buy pattern, under thea assumption that the later generation one is better.
+				//
+				_allLeaderHistory[_allLeaderHistoryHashes.FindFirstIndex(curHash)] = _leaders[leaderIndex];
+			}
+			else
+			{
+				_allLeaderHistoryHashes.PushEnd(curHash);
+				_allLeaderHistory.PushEnd(_leaders[leaderIndex]);
+			}
+		}
+
+		ComputeProgressionDecisions(cards, _leaders[0], _bestLeaderHistory, _directory + "decisions-progression/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
 
 		if (_generation % 64 == 0)
 		{
