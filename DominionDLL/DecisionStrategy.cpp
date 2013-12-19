@@ -92,14 +92,14 @@ String DecisionStrategy::getStringInfo() const {
 	String result = "";
 	int d = 0;
 	for (Vector<FeatureWeight>* v : *_decisionWeights) {
-		result += "\n";
+		result += "{";
 		result += "d:" + String(d);
 		for (FeatureWeight f : *v) {
-			result += (" (f:" + String(f.type)) + (" wt:" + String(f.weight) + ")"); 
+			result += ("(f:" + String(f.type)) + (" wt:" + String(f.weight) + ")"); 
 		}
+		result += "}";
 		d++;
 	}
-	result += "\n";
 	return result;
 }
 
