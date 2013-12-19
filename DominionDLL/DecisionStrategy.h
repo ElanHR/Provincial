@@ -85,7 +85,8 @@ typedef enum Decisions{
 	//PREFER_BUY_FIRST_WITCH, PREFER_BUY_FIRST_MOAT,
 	//PREFER_BUY_PROVINCES, PREFER_BUY_DUCHIES, PREFER_BUY_ESTATES,
 	//PREFER_BUY_GOLD, PREFER_BUY_SILVER, PREFER_BUY_COPPER
-	NUM_DECISIONS
+	NUM_DECISIONS,
+	INVALID_DECISION
 };
 
 typedef enum Feature{
@@ -172,7 +173,7 @@ public:
 
 	Vector<Feature>* getPertinentFeatures(Decisions d) const;
 
-	double getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const;
+	double getDecisionWeight(const State &s, Decisions d) const;
 
 	DecisionStrategy* Mutate(const CardDatabase &cards, const GameOptions &options) const;
 
@@ -180,7 +181,7 @@ public:
 	DecisionStrategy* MutateOnlyDecisions(const CardDatabase &cards, const GameOptions &options) const;
 
 	String getStringInfo() const;
-
+	Decisions getActionPlayDecision(Card* c) const;
 
 	String Name() const
 	{

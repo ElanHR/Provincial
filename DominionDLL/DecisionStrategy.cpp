@@ -99,6 +99,85 @@ String DecisionStrategy::getStringInfo() const {
 	return result;
 }
 
+Decisions DecisionStrategy::getActionPlayDecision(Card* c) const {
+	String name = c->name;
+	if (name == "cellar") {
+		return Cellar_Play;
+	}
+	else if (name == "chapel") {
+		return Chapel_Play;
+	}
+	else if (name == "moat") {
+		return Moat_Play;
+	}
+	else if (name == "chancellor") {
+		return Chancellor_Play;
+	}
+	else if (name == "village") {
+		return Village_Play;
+	}
+	else if (name == "woodcutter") {
+		return Woodcutter_Play;
+	}
+	else if (name == "workshop") {
+		return Workshop_Play;
+	}
+	else if (name == "bureaucrat") {
+		return Bureaucrat_Play;
+	}
+	else if (name == "feast") {
+		return Feast_Play;
+	}
+	else if (name == "militia") {
+		return Militia_Play;
+	}
+	else if (name == "moneylender") {
+		return Moneylender_Play;
+	}
+	else if (name == "remodel") {
+		return Remodel_Play;
+	}
+	else if (name == "smithy") {
+		return Smithy_Play;
+	}
+	else if (name == "spy") {
+		return Spy_Play;
+	}
+	else if (name == "thief") {
+		return Thief_Play;
+	}
+	else if (name == "throne room") {
+		return ThroneRoom_Play;
+	}
+	else if (name == "council room") {
+		return CouncilRoom_Play;
+	}
+	else if (name == "festival") {
+		return Festival_Play;
+	}
+	else if (name == "laboratory") {
+		return Laboratory_Play;
+	}
+	else if (name == "library") {
+		return Library_Play;
+	}
+	else if (name == "market") {
+		return Market_Play;
+	}
+	else if (name == "mine") {
+		return Mine_Play;
+	}
+	else if (name == "witch") {
+		return Witch_Play;
+	}
+	else if (name == "adventurer") {
+		return Adventurer_Play;
+	}
+	else{ // default
+		return INVALID_DECISION;
+	}
+}
+
 Vector<Feature>* DecisionStrategy::getPertinentFeatures(Decisions d) const {
 	Vector<Feature>* v = new Vector<Feature>();
 	switch (d) {
@@ -430,7 +509,7 @@ Vector<Feature>* DecisionStrategy::getPertinentFeatures(Decisions d) const {
 	return v;
 }
 
-double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &response, Decisions d) const{
+double DecisionStrategy::getDecisionWeight(const State &s, Decisions d) const{
 
 	double w = 0.0;
 
@@ -439,7 +518,7 @@ double DecisionStrategy::getDecisionWeight(const State &s, DecisionResponse &res
 		FeatureWeight f = _decisionWeights->at(d)->at(i);
 
 		const DecisionState &d = s.decision;
-		Card &a = *d.activeCard;
+		//Card &a = *d.activeCard;
 		int player = s.decision.controllingPlayer;
 		const PlayerState &p = s.players[player];
 

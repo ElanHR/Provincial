@@ -182,39 +182,18 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
     {
         auto scoringFunction = [this,&p,&s](Card *c) 
         {
-			/* Consider every card, decide based on features
-			// playing each card in the base game:
-			Cellar_Play,
-			Chapel_Play,
-			Moat_Play,
-			Chancellor_Play,
-			Village_Play,
-			Woodcutter_Play,
-			Workshop_Play,
-			Bureaucrat_Play,
-			Feast_Play,
-			// gardens no action
-			Militia_Play,
-			Moneylender_Play,
-			Remodel_Play,
-			Smithy_Play,
-			Spy_Play,
-			Thief_Play,
-			ThroneRoom_Play,
-			CouncilRoom_Play,
-			Festival_Play,
-			Laboratory_Play,
-			Library_Play,
-			Market_Play,
-			Mine_Play,
-			Witch_Play,
-			Adventurer_Play,*/
+			const DecisionStrategy* strat = dynamic_cast<const DecisionStrategy*>(&this->Agenda());
+			Decisions d = strat->getActionPlayDecision(c);
+			double decisionScore = 0;
+			if (d != INVALID_DECISION) {
+				decisionScore = strat->getDecisionWeight(s, d);
+			}
+			else {
+				Console::WriteLine("AAH! INVALID DECISION for playing card:" + c->name);
+			}
 
-
-
-
-            int score = c->priority + 2;
-            if(c->name == "moneylender" && !p.hand.Contains(s.data->baseCards.copper)) score = -1;
+            double score = c->priority + 2;
+            //if(c->name == "moneylender" && !p.hand.Contains(s.data->baseCards.copper)) score = -1;
             if(c->name == "treasure map" && p.hand.Count(s.data->baseCards.treasureMap) == 1) score = -1;
             
             if(c->name == "tactician")
@@ -234,7 +213,7 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
 
             if(c->name == "conspirator" && s.ActionsPlayedThisTurn() >= 2) score = s.data->baseCards.treasury->priority;
 
-            return score;
+            return score + decisionScore;
         };
         response.singleCard = AIUtility::BestCard(d.cardChoices, scoringFunction, 0.0);
     }
@@ -361,8 +340,8 @@ void PlayerStateInformed::MakeBaseDecision(const State &s, DecisionResponse &res
     }
     else if(a.name == "chancellor")
     {
-		if( _strategy->getDecisionWeight(s, response, Chancellor_DiscardDeck) 
-			> _strategy->getDecisionWeight(s, response, Chancellor_DoNothing) ){
+		if( _strategy->getDecisionWeight(s, Chancellor_DiscardDeck) 
+			> _strategy->getDecisionWeight(s, Chancellor_DoNothing) ){
 			response.choice = 0; // discard deck
 		}
 		else{
