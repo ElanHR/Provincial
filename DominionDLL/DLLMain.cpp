@@ -98,11 +98,11 @@ int main(int argc, char *argv[])
 
 
 
-	app->ProcessCommand("trainAIStart@" + directory + "@" + String(chamberCount) + "@" + trainingType + "@" + buyMenu);
+	app->ProcessCommand("trainAIStart@" + trainingType + "@" + directory + "@" + String(chamberCount) + "@" + buyMenu);
 
     for (int generationIndex = 0; generationIndex < generationCount; generationIndex++)
     {
-        app->ProcessCommand("trainAIStep@" + directory);
+		app->ProcessCommand("trainAIStep@" + trainingType + "@" + directory + ");
     }
 
     return 0;

@@ -520,9 +520,9 @@ void TestChamber::ComputeLeaderboard(const CardDatabase &cards, const Vector<Tes
     }
 }
 
-Grid<TestResult> TestChamber::TestPool(const CardDatabase &cards, const String &filename)
+Grid<TestResult> TestChamber::TestBuyPool(const CardDatabase &cards, const String &filename)
 {
-    Grid<TestResult> allResults = RunAllPairsTests(cards, _pool, _leaders, 200, _parameters.standardGameCount);
+    Grid<TestResult> allResults = RunAllPairsTests(cards, _pool, _leaders, 200,_parameters.standardGameCount);
     const UINT supplyCount = allResults(0, 0).buyRatio.Length();
     const UINT leaderCount = _leaders.Length();
 
@@ -572,6 +572,60 @@ Grid<TestResult> TestChamber::TestPool(const CardDatabase &cards, const String &
     }
 
     return allResults;
+}
+
+Grid<TestResult> TestChamber::TestDecisionPool(const CardDatabase &cards, const String &filename)
+{
+	Grid<TestResult> allResults = RunAllPairsTests(cards, _pool, _leaders, 200, _parameters.standardGameCount);
+	const UINT supplyCount = allResults(0, 0).buyRatio.Length();
+	const UINT leaderCount = _leaders.Length();
+
+	double score = 0.0;
+	for (UINT playerIndex = 0; playerIndex < _pool.Length(); playerIndex++)
+	{
+		double rating = 0.0;
+		for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++) rating += allResults(playerIndex, leaderIndex).winRatio[0] * _leaderWeights[leaderIndex];
+		_pool[playerIndex]->rating = rating;
+	}
+
+	ofstream file(filename.CString());
+	file << "Generation" << endl;
+	file << endl << "Kingdom cards:\t" << _gameOptions.ToString() << endl;
+
+	file << endl << "Leaders:\t" << leaderCount << endl;
+	for (UINT leaderIndex = 0; leaderIndex < leaderCount; leaderIndex++)
+	{
+		file << "Leader " << leaderIndex << ":\t" << (_leaders[leaderIndex]->rating - 0.5) * 200.0 << "\t" << _leaders[leaderIndex]->VisualizationDescription(_supplyCards, true, false) << endl;
+	}
+
+	/*file << "Leaders" << endl;
+	file << "Index\tRating\tName" << endl;
+	for(UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++)
+	{
+	file << leaderIndex << '\t' << _leaders[leaderIndex]->rating << '\t' << _leaders[leaderIndex]->p->ControllerName() << endl;
+	}*/
+
+	file << endl << "Index\tRating";
+	for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++) file << "\tL" << leaderIndex;
+	for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << _supplyCards[supplyIndex]->PrettyName();
+	file << "\tName" << endl;
+	for (UINT playerIndex = 0; playerIndex < _pool.Length(); playerIndex++)
+	{
+		file << playerIndex << '\t' << _pool[playerIndex]->rating;
+
+		Vector<double> buyRatio(supplyCount, 0.0);
+		for (UINT leaderIndex = 0; leaderIndex < _leaders.Length(); leaderIndex++)
+		{
+			for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) buyRatio[supplyIndex] += allResults(playerIndex, leaderIndex).buyRatio[supplyIndex];
+			file << '\t' << allResults(playerIndex, leaderIndex).winRatio[0];
+		}
+
+		for (UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++) file << '\t' << buyRatio[supplyIndex];
+
+		file << '\t' << _pool[playerIndex]->p->ControllerName() << endl;
+	}
+
+	return allResults;
 }
 
 void TestChamber::InitializeBuyPool(const CardDatabase &cards, PlayerType playerType)
@@ -635,10 +689,11 @@ void TestChamber::InitializeBuyPool(const CardDatabase &cards, PlayerType player
     }*/
 }
 
+const int DECISION_POOL_SIZE = 1000;
 void TestChamber::InitializeDecisionPool(const CardDatabase &cards, String buyMenu)
 {
 	_pool.FreeMemory();
-	for (UINT numDecisionsInPool = 0; numDecisionsInPool < 11; numDecisionsInPool++)
+	for (UINT numDecisionsInPool = 0; numDecisionsInPool < DECISION_POOL_SIZE; numDecisionsInPool++)
 	{
 		TestPlayer *newPlayer = new TestPlayer(new PlayerStateInformed(new DecisionStrategy(cards, buyMenu)));
 		
@@ -805,23 +860,12 @@ void TestChamber::StrategizeStartBuys(const CardDatabase &cards, const GameOptio
 	g.NewGame(playerList, _gameOptions);
 	_supplyCards = g.data().supplyCards;
 
-	if (playerType == HEURISTIC_PLAYER){
-		//
-		// Start the pool and leaders with variations on big money
-		//
-		InitializeBuyPool(cards, playerType);
-	}
-	else if (playerType == STATEINFORMED_PLAYER){
-		Console::WriteLine(buyMenu);
-		// Start the pool with same buyDecisions and random weights
-
-		//Should have leaderboards already 
-		//load from dir
-
-		//directory
-
-		InitializeDecisionPool(cards, buyMenu);
-	}
+	
+	//
+	// Start the pool and leaders with variations on big money
+	//
+	InitializeBuyPool(cards, playerType);
+	
 
 	while (_leaders.Length() < _parameters.leaderCount)
 	{
@@ -841,7 +885,90 @@ void TestChamber::StrategizeStepBuys(const CardDatabase &cards, PlayerType playe
 	//
 	// Run all AIs in the current pool against the leaders
 	//
-	Grid<TestResult> poolResults = TestPool(cards, _directory + "generations/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
+	Grid<TestResult> poolResults = TestBuyPool(cards, _directory + "generations/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
+
+	AssignBuyIDs(poolResults);
+
+	//
+	// Sort the pool according to their scores relative to the previous leaders
+	//
+	_pool.Sort([](const TestPlayer *a, const TestPlayer *b) { return a->rating > b->rating; });
+
+	Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%" + " using player type:" + String(playerType));
+	Console::WriteLine(_pool[0]->VisualizationDescription(_supplyCards, true));
+
+	AssignNewLeaders(cards, playerType);
+
+	GenerateNewPool(cards, playerType);
+
+	SaveVisualizationFiles(cards);
+
+	_generation++;
+}
+
+
+void TestChamber::StrategizeStartDecisions(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType, String buyMenu)
+{
+	FreeMemory();
+	_gameOptions = options;
+	_metaSuffix = metaSuffix;
+	_directory = directory;
+
+	//
+	// Higher-ranked leaders receive higher weight to reward strategies that are able to defeat them
+	//
+	_leaderWeights.Allocate(_parameters.leaderCount);
+	for (UINT leaderIndex = 0; leaderIndex < _parameters.leaderCount; leaderIndex++)
+	{
+		_leaderWeights[leaderIndex] = Math::LinearMap(0.0, _parameters.leaderCount - 1.0, _parameters.leaderCurveMin, _parameters.leaderCurveMax, double(leaderIndex));
+	}
+	double sum = _leaderWeights.Sum();
+	for (UINT leaderIndex = 0; leaderIndex < _parameters.leaderCount; leaderIndex++) _leaderWeights[leaderIndex] /= sum;
+
+	if (_parameters.leaderCount == 1) _leaderWeights[0] = 1.0;
+
+	//
+	// Make a game just so we can easily grab the supply piles
+	//
+	DominionGame g;
+	g.Init(cards);
+	Vector<PlayerInfo> playerList;
+	playerList.PushEnd(PlayerInfo(0, "p0", new PlayerHuman()));
+	playerList.PushEnd(PlayerInfo(1, "p1", new PlayerHuman()));
+	g.NewGame(playerList, _gameOptions);
+	_supplyCards = g.data().supplyCards;
+
+	
+	Console::WriteLine(buyMenu);
+	// Start the pool with same buyDecisions and random weights
+
+	//Should have leaderboards already 
+	//load from dir
+
+	//directory
+
+	InitializeDecisionPool(cards, buyMenu);
+	
+
+	while (_leaders.Length() < _parameters.leaderCount)
+	{
+		_leaders.PushEnd(_pool.RandomElement());
+	}
+
+	Console::WriteLine("strategize started using player type:" + String(playerType));
+}
+
+
+void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType playerType)
+{
+	Assert(_pool.Length() != 0, "StrategizeStart not called");
+
+	Console::WriteLine("Testing generation " + String(_generation) + _metaSuffix + " using player type:" + String(playerType));
+
+	//
+	// Run all AIs in the current pool against the leaders
+	//
+	Grid<TestResult> poolResults = TestDecisionPool(cards, _directory + "generations/" + String::ZeroPad(_generation, 3) + _metaSuffix + ".txt");
 
 	AssignBuyIDs(poolResults);
 

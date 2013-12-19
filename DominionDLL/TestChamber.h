@@ -1,4 +1,10 @@
 
+
+typedef enum TrainingType{
+	TRAINING_BUYS,
+	TRAINING_DECISIONS
+};
+
 struct TestParameters
 {
     GameOptions options;
@@ -66,7 +72,10 @@ class TestChamber
 public:
     void FreeMemory();
 	void StrategizeStartBuys(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType, String buyMenu);
-	void StrategizeStepBuys(const CardDatabase &cards, PlayerType playerType);
+	void StrategizeStepBuys(const CardDatabase &cards,  PlayerType playerType);
+
+	void StrategizeStartDecisions(const CardDatabase &cards, const GameOptions &options, const String &directory, const String &metaSuffix, PlayerType playerType, String buyMenu);
+	void StrategizeStepDecisions(const CardDatabase &cards, PlayerType playerType);
 
     TestResult Test(const CardDatabase &cards, const TestParameters &params, PlayerType playerTypeToBeTested, bool useConsole=true);
 
@@ -75,10 +84,14 @@ private:
     void ComputeCounters(const CardDatabase &cards, const String &filename);
     void ComputeProgression(const CardDatabase &cards, TestPlayer* leader, const Vector<TestPlayer*> &players, const String &filename);
     void ComputeLeaderboard(const CardDatabase &cards, const Vector<TestPlayer*> &players, const String &filename, UINT gameCount);
+	
 	void InitializeBuyPool(const CardDatabase &cards, PlayerType playerType);
 	void InitializeDecisionPool(const CardDatabase &cards, String buyMenu);
 
-    Grid<TestResult> TestPool(const CardDatabase &cards, const String &filename);
+	Grid<TestResult> TestBuyPool(const CardDatabase &cards, const String &filename);
+	Grid<TestResult> TestDecisionPool(const CardDatabase &cards, const String &filename);
+
+
 
     void AssignBuyIDs(const Grid<TestResult> &poolResults);
 	void AssignNewLeaders(const CardDatabase &cards, PlayerType playerType);

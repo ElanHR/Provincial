@@ -1,6 +1,6 @@
 #include "Main.h"
 
-void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, PlayerType playerType, String buyMenu)
+void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptions &options, const String &directory, int chamberCount, TrainingType trainingType, PlayerType playerType, String buyMenu)
 {
     Console::WriteLine("BLAAAH!!! Strategizing for kingdom piles:");
     Console::WriteLine(options.ToString());
@@ -18,15 +18,22 @@ void MetaTestChamber::StrategizeStart(const CardDatabase &cards, const GameOptio
         chamberSuffix[0] += chamberIndex;
         if(_chambers.Length() == 1) chamberSuffix = "";
         else chamberSuffix = "_" + chamberSuffix;
-		_chambers[chamberIndex].StrategizeStartBuys(cards, options, directory, chamberSuffix, playerType, buyMenu);
+
+		if(trainingType == TRAINING_BUYS)
+			_chambers[chamberIndex].StrategizeStartBuys(cards, options, directory, chamberSuffix, playerType, buyMenu);
+		else if (trainingType == TRAINING_DECISIONS)
+			_chambers[chamberIndex].StrategizeStartDecisions(cards, options, directory, chamberSuffix, playerType, buyMenu);
     }
 }
 
-void MetaTestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playerType)
+void MetaTestChamber::StrategizeStep(const CardDatabase &cards, TrainingType trainingType, PlayerType playerType)
 {
     for(UINT chamberIndex = 0; chamberIndex < _chambers.Length(); chamberIndex++)
     {
-		_chambers[chamberIndex].StrategizeStepBuys(cards, playerType);
+		if (trainingType == TRAINING_BUYS)
+			_chambers[chamberIndex].StrategizeStepBuys(cards, playerType);
+		else if (trainingType == TRAINING_DECISIONS)
+			_chambers[chamberIndex].StrategizeStepDecisions(cards, playerType);
     }
 
     TestChamber &chamber = _chambers[0];
@@ -34,7 +41,12 @@ void MetaTestChamber::StrategizeStep(const CardDatabase &cards, PlayerType playe
     {
         Console::WriteLine("Generating inter-chamber leaderboard comparison for generation " + String(chamber._generation - 1));
         Vector<TestPlayer*> metaLeaders;
-        for(TestChamber &c : _chambers) metaLeaders.PushEnd(c._leaders[0]);
-        chamber.ComputeLeaderboard(cards, metaLeaders, chamber._directory + "leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
+		for (TestChamber &c : _chambers) metaLeaders.PushEnd(c._leaders[0]);
+		
+		if (trainingType == TRAINING_BUYS)
+			chamber.ComputeLeaderboard(cards, metaLeaders, chamber._directory + "leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
+		else if (trainingType == TRAINING_DECISIONS)
+			chamber.ComputeLeaderboard(cards, metaLeaders, chamber._directory + "decision-leaderboard/" + String::ZeroPad(chamber._generation - 1, 3) + ".txt", 20000);
+
     }
 }
