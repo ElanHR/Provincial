@@ -1,7 +1,7 @@
 #include "Main.h"
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) : BuyAgendaMenu(cards, s){
-	Init(s);
+	Init();
 
 	//LoadDecisionWeightsFromFile(s);
 }
