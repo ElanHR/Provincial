@@ -1,16 +1,19 @@
 #include "Main.h"
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s) : BuyAgendaMenu(cards, s){
+	//Console::WriteLine("ConA - " + s);
 	Init();
 }
 
 DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const String &s, const String &decString) : BuyAgendaMenu(cards, s){
+	//Console::WriteLine("ConB - " + s);
 	Init(decString);
 }
 
 // copying the other one, should copy 
 DecisionStrategy::DecisionStrategy(BuyMenu &m) : BuyAgendaMenu(m)
 {
+	//Console::WriteLine("ConC - " );
 	Init(); // this should be copying the old
 	_decisionWeights->FreeMemory();
 }

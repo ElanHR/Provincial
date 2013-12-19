@@ -6,7 +6,11 @@
 
 PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
 {
-
+	Console::WriteLine("NEW -  MY BUY ORDER IS: ");
+	for (unsigned int i = 0; i < strategy->GetMenu().entries.Length(); i++){
+		Console::WriteLine(strategy->GetMenu().entries[i].c->name);
+	}
+	
 	//Console::WriteLine("PlayerStateInformed generation " );
 
     //_buyAgenda = agenda;
