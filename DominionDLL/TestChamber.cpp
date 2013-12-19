@@ -117,14 +117,14 @@ void TestChamber::AssignNewLeaders(const CardDatabase &cards, PlayerType playerT
         for(UINT poolIndex = 0; poolIndex < _pool.Length() && !newLeaderFound; poolIndex++)
         {
             TestPlayer *curPlayer = _pool[poolIndex];
-            if(!leaderBuyIDs.Contains(curPlayer->buyID) && !leaderMenuIDs.Contains(curPlayer->VisualizationDescription(_supplyCards, true, true)))
+			if (_trainingType == TRAINING_DECISIONS ||  !leaderBuyIDs.Contains(curPlayer->buyID) && !leaderMenuIDs.Contains(curPlayer->VisualizationDescription(_supplyCards, true, true)))
             {
                 bool overusedCardFound = false;
                 for(UINT supplyIndex = 0; supplyIndex < supplyCount; supplyIndex++)
                 {
                     if(curPlayer->buyID[supplyIndex] == '1' && leaderSupplyCounters[supplyIndex] <= 0) overusedCardFound = true;
                 }
-				if (!overusedCardFound || playerType == STATEINFORMED_PLAYER)
+				if (!overusedCardFound || _trainingType == TRAINING_DECISIONS)
                 {
                     newLeaderFound = true;
                     _leaders.PushEnd(curPlayer);
@@ -202,140 +202,8 @@ void TestChamber::GenerateNewPool(const CardDatabase &cards, PlayerType playerTy
             _pool.PushEnd(mutatedChild);
         }
     }
-    else
-    {
-        //
-        // Fixed set of possible permutations
-        //
-        Vector<TestPlayer*> newPool;
-        for(TestPlayer *p : _leaders)
-        {
-            //
-            // Try possible alterations to the menu entries
-            //
-            const BuyMenu &menu = dynamic_cast<const BuyAgendaMenu*>(&(p->p->Agenda()))->GetMenu();
-            for(UINT menuIndex = 0; menuIndex < menu.entries.Length(); menuIndex++)
-            {
-                const BuyMenuEntry &curEntry = menu.entries[menuIndex];
-                if(curEntry.count != 99)
-                {
-                    //
-                    // Eliminate the current menu entry
-                    //
-                    BuyMenu menuCopy = menu;
-                    menuCopy.entries[menuIndex].count = 0;
-
-					if (playerType == HEURISTIC_PLAYER)
-						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (playerType == STATEINFORMED_PLAYER){
-						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
-					}else{}
-
-
-                    //
-                    // Adjust count of current menu entry
-                    //
-                    for(int countDelta = -2; countDelta <= 2; countDelta++)
-                    {
-                        int newCount = curEntry.count + countDelta;
-                        if(newCount != curEntry.count && newCount >= 1 && newCount <= 10)
-                        {
-                            BuyMenu menuCopy = menu;
-                            menuCopy.entries[menuIndex].count = newCount;
-
-							if (playerType == HEURISTIC_PLAYER)
-								newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-							else if (playerType == STATEINFORMED_PLAYER){
-								newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
-							}else{}
-                            
-                        }
-                    }
-
-                    //
-                    // Replace entry with 1, 2, and 4 of each possible supply card
-                    //
-                    int cardCountList[3] = {1, 2, 4};
-                    for(UINT supplyIndex = 0; supplyIndex < _supplyCards.Length(); supplyIndex++)
-                    {
-                        Card *c = _supplyCards[supplyIndex];
-                        if(c != curEntry.c && curEntry.CardValidInSlot(c) && c->name != "curse" && c->name != "copper" && c->name != "estate" && c->name != "duchy" && c->name != "province" && c->name != "colony")
-                        {
-                            for(UINT countIndex = 0; countIndex < 3; countIndex++)
-                            {
-                                BuyMenu menuCopy = menu;
-                                menuCopy.entries[menuIndex].c = c;
-                                menuCopy.entries[menuIndex].count = cardCountList[countIndex];
-
-
-
-								if (playerType == HEURISTIC_PLAYER)
-									newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-								else if (playerType == STATEINFORMED_PLAYER){
-									newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
-								}else{}
-                                
-                            }
-                        }
-                    }
-                }
-            }
-
-            //
-            // Try possible alterations to the buy thresholds
-            //
-            
-            for(int countDelta = -2; countDelta <= 2; countDelta++)
-            {
-                int newEstateCount = menu.estateBuyThreshold + countDelta;
-                if(newEstateCount != menu.estateBuyThreshold && newEstateCount >= 0 && newEstateCount <= 8)
-                {
-                    BuyMenu menuCopy = menu;
-                    menuCopy.estateBuyThreshold = newEstateCount;
-
-					if (playerType == HEURISTIC_PLAYER)
-						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (playerType == STATEINFORMED_PLAYER){
-						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
-					}
-					else{}
-				}
-
-                int newDuchyCount = menu.duchyBuyThreshold + countDelta;
-                if(newDuchyCount != menu.duchyBuyThreshold && newDuchyCount >= 0 && newDuchyCount <= 8)
-                {
-                    BuyMenu menuCopy = menu;
-                    menuCopy.duchyBuyThreshold = newDuchyCount;
-
-					if (playerType == HEURISTIC_PLAYER)
-						newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-					else if (playerType == STATEINFORMED_PLAYER){
-						newPool.PushEnd(new TestPlayer(new PlayerStateInformed(new DecisionStrategy(menuCopy))));
-					}
-					else{}
-				}
-
-                int newProvinceCount = menu.provinceBuyThreshold + countDelta;
-                if(_gameOptions.prosperity && newProvinceCount != menu.provinceBuyThreshold && newProvinceCount >= 0 && newProvinceCount <= 8)
-                {
-                    BuyMenu menuCopy = menu;
-                    menuCopy.provinceBuyThreshold = newProvinceCount;
-                    newPool.PushEnd(new TestPlayer(new PlayerHeuristic(new BuyAgendaMenu(menuCopy))));
-                }
-            }
-        }
-
-        Vector<String> IDs;
-        for(TestPlayer *p : newPool)
-        {
-            String id = p->VisualizationDescription(_supplyCards, true);
-            if(!IDs.Contains(id))
-            {
-                IDs.PushEnd(id);
-                _pool.PushEnd(p);
-            }
-        }
-    }
+    
+    
 }
 
 Grid<TestResult> TestChamber::RunAllPairsTests(const CardDatabase &cards, const Vector<TestPlayer*> &playersA, const Vector<TestPlayer*> &playersB, UINT minGameCount, UINT maxGameCount)
@@ -1150,7 +1018,7 @@ void TestChamber::StrategizeStepDecisions(const CardDatabase &cards, PlayerType 
 	_pool.Sort([](const TestPlayer *a, const TestPlayer *b) { return a->rating > b->rating; });
 
 	Console::WriteLine("generation" + String::ZeroPad(_generation, 3) + ", leader win percentage: " + String(_pool[0]->rating * 100.0) + "%" + " using player type:" + String(playerType));
-	Console::WriteLine(_pool[0]->VisualizationDescriptionDecisionStrategy());
+	//Console::WriteLine(_pool[0]->VisualizationDescriptionDecisionStrategy());
 
 	AssignNewLeaders(cards, playerType);
 

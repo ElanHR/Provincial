@@ -15,6 +15,10 @@ PlayerStateInformed::PlayerStateInformed(const DecisionStrategy* strategy)
     _remodelGoldThreshold = 2;
 }
 
+PlayerStateInformed::~PlayerStateInformed(){
+	delete _strategy;
+}
+
 /// initial Decision method, 
 void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &response)
 {

@@ -171,6 +171,9 @@ public:
 
 	DecisionStrategy(const CardDatabase &cards, const GameOptions &options, Card *a, Card *b);
 
+
+	~DecisionStrategy();
+
 	Vector<Feature>* getPertinentFeatures(Decisions d) const;
 
 	double getDecisionWeight(const State &s, Decisions d) const;

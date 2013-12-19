@@ -105,6 +105,7 @@ public:
 
 	//PlayerStateInformed(const BuyAgenda *agenda, const DecisionStrategy* strategy);
 	PlayerStateInformed(const DecisionStrategy* strategy);
+	~PlayerStateInformed();
 
     void MakeDecision(const State &s, DecisionResponse &response);
 	String ControllerName() { return "StateInformed " + _strategy->Name(); }
