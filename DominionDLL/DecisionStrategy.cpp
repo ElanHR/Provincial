@@ -105,7 +105,7 @@ void DecisionStrategy::Init(const String &decisions){
 	// decision:
 	regex decRegex("\\{d:(\\d+)(.*?)\\}");
 	// feature and weight
-	regex fwtRegex("\\(f:(\\d+) wt:((?:-|\\.|\\d)+)\\)");
+	regex fwtRegex("\\(f:(\\d+) wt:(.*?)\\)");
 	Console::WriteLine("before convert:\n" + decisions);
 	std::string d(decisions.CString(), decisions.Length());
 	Console::WriteString("after convert:\n");
@@ -118,20 +118,23 @@ void DecisionStrategy::Init(const String &decisions){
 	UINT dIndex = 0;
 	for (std::sregex_iterator it = decBegin; it != decEnd; ++it) {
 		std::smatch match = *it;
-		std::string match_str = match.str();
+		std::string match_dnum = match[1];
+		std::string match_dtext = match[2];
 		Console::WriteString("found decision:");
-		Console::WriteLine(match_str.c_str());
+		Console::WriteLine(match_dnum.c_str());
+		Console::WriteString("text:");
+		Console::WriteLine(match_dtext.c_str());
 		// add a vector to decision weights
 		_decisionWeights->PushEnd(new Vector<FeatureWeight>());
 		// for each feature weight:
-		auto featureBegin = sregex_iterator(match_str.begin(), match_str.end(), fwtRegex);
+		auto featureBegin = sregex_iterator(match_dtext.begin(), match_dtext.end(), fwtRegex);
 		auto featureEnd = sregex_iterator();
 		Console::WriteLine("Found num fwts:" + String(std::distance(featureBegin, featureEnd)));
 		for (std::sregex_iterator itf = featureBegin; itf != featureEnd; ++itf) {
 			// get the matches
 			std::smatch fmatch = *itf;
-			std::string match_f = fmatch[0];
-			std::string match_wt = fmatch[1];
+			std::string match_f = fmatch[1];
+			std::string match_wt = fmatch[2];
 			Console::WriteString("f:");
 			Console::WriteString(match_f.c_str());
 			Console::WriteString(" wt:");
