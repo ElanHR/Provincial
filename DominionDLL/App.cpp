@@ -65,11 +65,14 @@ UINT32 App::ProcessCommand(const String &command)
             if(parameters[1] == "Human") playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHuman));
 			else {
 				// TODO if there's decision info?
+				Console::WriteLine("param:" + parameters[1]);
 				Vector<String> parts = parameters[1].Partition("\t");
 				if (parts.Length() == 2) {
+					Console::WriteLine("using state informed player");
 					playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
 				}
 				else if (parts.Length() == 1) {
+					Console::WriteLine("using heuristic player");
 					playerList.PushEnd(PlayerInfo(0, "Adam", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~", "@")))));
 				}
 				else {
@@ -82,11 +85,14 @@ UINT32 App::ProcessCommand(const String &command)
             if(parameters[2] == "Human") playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHuman));
 			else {
 				// TODO if there's decision info?
+				Console::WriteLine("param:" + parameters[2]);
 				Vector<String> parts = parameters[2].Partition("\t");
 				if (parts.Length() == 2) {
+					Console::WriteLine("using state informed player");
 					playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
 				}
 				else if (parts.Length() == 1) {
+					Console::WriteLine("using heuristic player");
 					playerList.PushEnd(PlayerInfo(1, "Beth", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
 				}
 				else {
@@ -110,13 +116,16 @@ UINT32 App::ProcessCommand(const String &command)
 
         playerList.PushEnd(PlayerInfo(0, "Heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[1].FindAndReplace("~","@")))));
 
+		Console::WriteLine("param:" + parameters[2]);
 		// TODO if there's decision info?
 		Vector<String> parts = parameters[2].Partition("\t");
 		if (parts.Length() == 2) {
+			Console::WriteLine("using state informed player");
 			playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerStateInformed(new DecisionStrategy(_cards, parts[0].FindAndReplace("~", "@"), parts[1]))));
 		}
 		else if (parts.Length() == 1) {
-			playerList.PushEnd(PlayerInfo(1, "StateInformed", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
+			Console::WriteLine("using heuristic player");
+			playerList.PushEnd(PlayerInfo(1, "heuristic", new PlayerHeuristic(new BuyAgendaMenu(_cards, parameters[2].FindAndReplace("~", "@")))));
 		}
 		else {
 			Console::WriteLine("AAHH BAD SPLIT BY TABS");

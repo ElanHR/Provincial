@@ -26,6 +26,7 @@ PlayerStateInformed::~PlayerStateInformed(){
 /// initial Decision method, 
 void PlayerStateInformed::MakeDecision(const State &s, DecisionResponse &response)
 {
+	Console::WriteLine("state informed making decision:!");
     const DecisionState &d = s.decision;
     if(d.type != DecisionSelectCards && d.type != DecisionDiscreteChoice)
     {
@@ -183,11 +184,14 @@ bool PlayerStateInformed::CardDesired(const State &s, int player, Card *c) const
 /// 
 void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &response)
 {
+	Console::WriteLine("state informed making phase decision");
     const DecisionState &d = s.decision;
     int player = s.decision.controllingPlayer;
-    const PlayerState &p = s.players[player];
+	const PlayerState &p = s.players[player];
+	Console::WriteLine("phase"+String(s.phase));
     if(s.phase == PhaseAction)
-    {
+	{
+		Console::WriteLine("phase action decision");
         auto scoringFunction = [this,&p,&s](Card *c) 
         {
 			const DecisionStrategy* strat = dynamic_cast<const DecisionStrategy*>(&this->Agenda());
@@ -226,7 +230,8 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
         response.singleCard = AIUtility::BestCard(d.cardChoices, scoringFunction, 0.0);
     }
     else if(s.phase == PhaseTreasure)
-    {
+	{
+		Console::WriteLine("phase treasure decision");
         //
         // grand market complicates playing treasures.
         //
@@ -259,7 +264,8 @@ void PlayerStateInformed::MakePhaseDecision(const State &s, DecisionResponse &re
         }
     }
     else if(s.phase == PhaseBuy)
-    {
+	{
+		Console::WriteLine("phase buy decision");
 		response.singleCard = _strategy->Buy(s, player, d.cardChoices);
     }
     else

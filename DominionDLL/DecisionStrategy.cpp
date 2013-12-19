@@ -167,7 +167,7 @@ String DecisionStrategy::getStringInfo() const {
 
 Decisions DecisionStrategy::getActionPlayDecision(Card* c) const {
 	String name = c->name;
-	//Console::WriteLine("get play decision for card:" + name);
+	Console::WriteLine("get play decision for card:" + name);
 	if (name == "cellar") {
 		return Cellar_Play;
 	}
@@ -578,12 +578,14 @@ Vector<Feature>* DecisionStrategy::getPertinentFeatures(Decisions d) const {
 }
 
 double DecisionStrategy::getDecisionWeight(const State &s, Decisions d) const{
+	Console::WriteLine("getting decision weight!");
 
 	double w = 0.0;
 
 	//for (FeatureWeight f : _decisionWeights[d]){
 	for (unsigned int i = 0; i < _decisionWeights->at(d)->Length(); i++){
 		FeatureWeight f = _decisionWeights->at(d)->at(i);
+		Console::WriteLine("f:" + String(f.type) + " wt:" + String(f.weight));
 
 		const DecisionState &d = s.decision;
 		//Card &a = *d.activeCard;
