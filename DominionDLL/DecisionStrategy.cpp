@@ -78,6 +78,14 @@ DecisionStrategy::DecisionStrategy(const CardDatabase &cards, const GameOptions 
 	Init();
 }
 
+DecisionStrategy::~DecisionStrategy(){
+
+	for (unsigned int i = 0; i < _decisionWeights->Length(); i++)
+		delete _decisionWeights->at(i);
+
+	delete _decisionWeights;
+}
+
 void DecisionStrategy::Init(){
 	_decisionWeights = new Vector<Vector<FeatureWeight>*>();
 	for (int d = 0; d < NUM_DECISIONS; d++){

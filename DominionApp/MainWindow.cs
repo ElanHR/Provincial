@@ -530,9 +530,11 @@ namespace BaseCodeApp
                 startInfo.FileName = "TestingGroundsInternal.exe";
 
                 activeProcess = new Process();
+                
                 activeProcess.StartInfo = startInfo;
+               
                 activeProcess.Start();
-
+                activeProcess.WaitForExit();
                 return "kingdomsIntermediate/" + directory + "/leaderboard/";
             }
             else
