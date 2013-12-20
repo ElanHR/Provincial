@@ -360,6 +360,15 @@ namespace BaseCodeApp
             Console.WriteLine("parameters");
             Console.WriteLine(parameters);
             String[] splitparams = parameters.Split('@');
+            String aibuyorder = "";
+            for (uint stri = 0; stri < splitparams.Length; stri++) {
+                if (splitparams[stri] != "Human")
+                {
+                    // split based on tabs, take the first one
+                    String[] splitai = splitparams[stri].Split('\t');
+                    aibuyorder = splitai[0];
+                }
+            }
             String newparams = "";
             for (uint stri = 0; stri < splitparams.Length; stri++)
             {
@@ -369,7 +378,7 @@ namespace BaseCodeApp
                 }
                 if (splitparams[stri] == "Human")
                 {
-                    newparams += "e3-d4-p8-gold@99|militia@1|market@10|militia@1|market@1|silver@99|moat@1".Replace('@', '~');
+                    newparams += aibuyorder.Replace('@', '~');
                 }
                 else
                 {
